@@ -39,7 +39,7 @@ export default function NotePage() {
       {/* Content Area */}
       <div className="flex-1 overflow-auto">
         {/* Note Header */}
-        <div className="px-8 pt-8 pb-4 border-b border-gray-200 bg-white">
+        <div className="px-8 pt-8 pb-4 bg-white">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Notlarım</h1>
           <p className="text-sm text-gray-500">{new Date().toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
         </div>

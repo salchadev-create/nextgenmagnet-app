@@ -43,7 +43,7 @@ export default function DashboardPage() {
     return () => clearInterval(interval);
   }, [uploadedPhotos.length]);
 
-  const displayPhoto = uploadedPhotos.length > 0 ? uploadedPhotos[currentPhotoIndex] : '/images/placeholder.svg';
+  const displayPhoto = uploadedPhotos.length > 0 ? uploadedPhotos[currentPhotoIndex] : '/images/seyehat.png';
 
   const handlePhotoClick = (index: number) => {
     setSelectedPhotoIndex(index);
@@ -150,7 +150,7 @@ export default function DashboardPage() {
 
   return (
     <motion.div
-      className="flex flex-col h-screen bg-black"
+      className="flex flex-col h-screen bg-white"
       initial={{ y: '-100%', opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: '-100%', opacity: 0 }}
