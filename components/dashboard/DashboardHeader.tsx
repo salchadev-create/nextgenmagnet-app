@@ -23,7 +23,7 @@ export default function DashboardHeader({ onBookIconClick }: DashboardHeaderProp
   };
 
   return (
-    <div className="bg-white border-b border-gray-200 shadow-sm p-6">
+    <div className="bg-white border-b border-gray-200 shadow-sm p-3">
       {/* Top Navigation */}
       <div className="flex justify-between items-center">
         {/* Logo */}

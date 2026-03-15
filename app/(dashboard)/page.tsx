@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes, faEllipsisV ,faEllipsis,faXmark} from '@fortawesome/free-solid-svg-icons';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 
 export default function DashboardPage() {
@@ -211,28 +213,28 @@ export default function DashboardPage() {
       {selectedPhotoIndex !== null && (
         <div className="fixed inset-0 z-50 flex flex-col overflow-hidden" style={{ backgroundColor: 'rgba(0, 0, 0, 0.9)' }}>
           {/* Top Bar */}
-          <div className="flex justify-between items-center p-4 relative shrink-0" style={{ backgroundColor: 'transparent' }}>
+          <div className="flex justify-between items-center p-3 relative shrink-0" style={{ backgroundColor: 'transparent' }}>
             <button
               onClick={handleCloseModal}
-              className="text-white text-3xl hover:opacity-75 transition"
+              className="text-white text-2xl hover:opacity-75 transition"
             >
-              ✕
+              <FontAwesomeIcon icon={faXmark} size="sm" />
             </button>
-            <span className="text-white text-lg">
+            <span className="text-white text-sm">
               {selectedPhotoIndex + 1} of {uploadedPhotos.length}
             </span>
             <div className="relative">
               <button
                 onClick={() => setShowMenu(!showMenu)}
-                className="text-white text-3xl hover:opacity-75 transition"
+                className="text-white text-2xl hover:opacity-75 transition"
               >
-                ⋯
+                <FontAwesomeIcon icon={faEllipsis} size="sm" />
               </button>
               {showMenu && (
                 <div className="absolute right-0 top-12 bg-gray-800 rounded shadow-lg z-10">
                   <button
                     onClick={handleDeletePhoto}
-                    className="w-full text-left px-6 py-3 text-gray-300 hover:bg-gray-700 transition text-sm font-medium flex items-center gap-2"
+                    className="w-full text-left px-6 py-3 text-gray-300 hover:bg-gray-800 transition text-sm font-medium flex items-center gap-2"
                   >
                     <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-9l-1 1H5v2h14V4z" />
