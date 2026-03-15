@@ -211,9 +211,13 @@ export default function DashboardPage() {
 
       {/* Photo Modal */}
       {selectedPhotoIndex !== null && (
-        <div className="fixed inset-0 z-50 flex flex-col overflow-hidden" style={{ backgroundColor: 'rgba(0, 0, 0, 0.9)' }}>
+        <div 
+          className="fixed inset-0 z-50 flex flex-col overflow-hidden" 
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.9)' }}
+          onClick={handleCloseModal}
+        >
           {/* Top Bar */}
-          <div className="flex justify-between items-center p-3 relative shrink-0" style={{ backgroundColor: 'transparent' }}>
+          <div className="flex justify-between items-center p-3 relative shrink-0" style={{ backgroundColor: 'transparent' }} onClick={(e) => e.stopPropagation()}>
             <button
               onClick={handleCloseModal}
               className="text-white text-2xl hover:opacity-75 transition"
@@ -231,7 +235,7 @@ export default function DashboardPage() {
                 <FontAwesomeIcon icon={faEllipsis} size="sm" />
               </button>
               {showMenu && (
-                <div className="absolute right-0 top-12 bg-gray-800 rounded shadow-lg z-10">
+                <div className="absolute right-0 top-12 bg-gray-800 rounded shadow-lg z-10" onClick={(e) => e.stopPropagation()}>
                   <button
                     onClick={handleDeletePhoto}
                     className="w-full text-left px-6 py-3 text-gray-300 hover:bg-gray-800 transition text-sm font-medium flex items-center gap-2"
@@ -260,11 +264,12 @@ export default function DashboardPage() {
               alt={`Photo ${selectedPhotoIndex + 1}`}
               className="max-w-full max-h-full object-contain"
               draggable="false"
+              onClick={(e) => e.stopPropagation()}
             />
           </div>
 
           {/* Bottom Bar with Actions */}
-          <div className="flex justify-end items-end p-6 shrink-0" style={{ backgroundColor: 'transparent' }}>
+          <div className="flex justify-end items-end p-6 shrink-0" style={{ backgroundColor: 'transparent' }} onClick={(e) => e.stopPropagation()}>
             <button className="flex items-center justify-center text-white bg-gray-800 hover:opacity-75 transition p-3 rounded">
               <i className="fas fa-download text-lg"></i>
             </button>
