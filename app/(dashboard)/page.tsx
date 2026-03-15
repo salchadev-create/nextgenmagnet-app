@@ -1,0 +1,288 @@
+'use client';
+
+import { useState, useRef, useEffect } from 'react';
+import DashboardHeader from '@/components/dashboard/DashboardHeader';
+
+export default function DashboardPage() {
+  const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+  const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
+  const [showMenu, setShowMenu] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [dragStart, setDragStart] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      Array.from(files).forEach((file) => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          if (event.target?.result) {
+            setUploadedPhotos((prev) => [...prev, event.target?.result as string]);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  };
+
+  // Slideshow effect
+  useEffect(() => {
+    if (uploadedPhotos.length === 0) return;
+
+    const interval = setInterval(() => {
+      setCurrentPhotoIndex((prev) => (prev + 1) % uploadedPhotos.length);
+    }, 3000); // Change photo every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [uploadedPhotos.length]);
+
+  const displayPhoto = uploadedPhotos.length > 0 ? uploadedPhotos[currentPhotoIndex] : '/images/placeholder.svg';
+
+  const handlePhotoClick = (index: number) => {
+    setSelectedPhotoIndex(index);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedPhotoIndex(null);
+    setShowMenu(false);
+  };
+
+  const handleNextPhoto = () => {
+    if (selectedPhotoIndex !== null) {
+      setSelectedPhotoIndex((selectedPhotoIndex + 1) % uploadedPhotos.length);
+      setShowMenu(false);
+    }
+  };
+
+  const handleDeletePhoto = () => {
+    if (selectedPhotoIndex !== null) {
+      const newPhotos = uploadedPhotos.filter((_, index) => index !== selectedPhotoIndex);
+      setUploadedPhotos(newPhotos);
+      setShowMenu(false);
+
+      // Close modal or go to previous photo
+      if (newPhotos.length === 0) {
+        setSelectedPhotoIndex(null);
+      } else if (selectedPhotoIndex >= newPhotos.length) {
+        setSelectedPhotoIndex(selectedPhotoIndex - 1);
+      }
+    }
+  };
+
+  const handlePrevPhoto = () => {
+    if (selectedPhotoIndex !== null) {
+      setSelectedPhotoIndex((selectedPhotoIndex - 1 + uploadedPhotos.length) % uploadedPhotos.length);
+    }
+  };
+
+  // Handle swipe/drag navigation
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (selectedPhotoIndex === null) return;
+    setIsDragging(true);
+    setDragStart(e.clientX);
+  };
+
+  const handleMouseUp = (e: React.MouseEvent) => {
+    if (!isDragging || selectedPhotoIndex === null) return;
+    setIsDragging(false);
+    
+    const dragEnd = e.clientX;
+    const diff = dragStart - dragEnd;
+
+    // If dragged more than 50px, change photo
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        // Dragged left, show next photo
+        handleNextPhoto();
+      } else {
+        // Dragged right, show previous photo
+        handlePrevPhoto();
+      }
+    }
+  };
+
+  // Handle touch swipe
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (selectedPhotoIndex === null) return;
+    setIsDragging(true);
+    setDragStart(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!isDragging || selectedPhotoIndex === null) return;
+    setIsDragging(false);
+    
+    const dragEnd = e.changedTouches[0].clientX;
+    const diff = dragStart - dragEnd;
+
+    // If swiped more than 50px, change photo
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        // Swiped left, show next photo
+        handleNextPhoto();
+      } else {
+        // Swiped right, show previous photo
+        handlePrevPhoto();
+      }
+    }
+  };
+
+  // Handle keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (selectedPhotoIndex === null) return;
+      
+      if (e.key === 'ArrowRight') handleNextPhoto();
+      if (e.key === 'ArrowLeft') handlePrevPhoto();
+      if (e.key === 'Escape') handleCloseModal();
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedPhotoIndex]);
+
+  return (
+    <div className="flex flex-col h-screen bg-black">
+      <DashboardHeader />
+      
+      {/* Scrollable Content Section - Photo + Gallery */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="w-full h-3/4 bg-gray-200">
+          <img
+            src={displayPhoto}
+            alt="Slideshow photo"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        
+        {/* Upload & Gallery Section */}
+        <div className="px-1 py-1">
+          <div className="grid grid-cols-3 gap-1 px-1 py-1">
+            {/* Uploaded Photos */}
+            {uploadedPhotos.map((photo, index) => (
+              <div
+                key={index}
+                className="aspect-square rounded-none overflow-hidden cursor-pointer hover:opacity-80 transition"
+                onClick={() => handlePhotoClick(index)}
+              >
+                <img
+                  src={photo}
+                  alt={`Uploaded photo ${index + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
+            
+            {/* Upload Box - Inside Grid */}
+            <div
+              onClick={handleUploadClick}
+              className="aspect-square border-2 border-dashed border-gray-300 rounded-none flex items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition"
+            >
+              <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Photo Modal */}
+      {selectedPhotoIndex !== null && (
+        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex flex-col">
+          {/* Top Bar */}
+          <div className="flex justify-between items-center p-4 bg-black relative">
+            <button
+              onClick={handleCloseModal}
+              className="text-white text-3xl hover:opacity-75 transition"
+            >
+              ✕
+            </button>
+            <span className="text-white text-lg">
+              {selectedPhotoIndex + 1} of {uploadedPhotos.length}
+            </span>
+            <div className="relative">
+              <button
+                onClick={() => setShowMenu(!showMenu)}
+                className="text-white text-3xl hover:opacity-75 transition"
+              >
+                ⋯
+              </button>
+              {showMenu && (
+                <div className="absolute right-0 top-12 bg-gray-800 rounded shadow-lg z-10">
+                  <button
+                    onClick={handleDeletePhoto}
+                    className="w-full text-left px-6 py-3 text-gray-300 hover:bg-gray-700 transition text-sm font-medium flex items-center gap-2"
+                  >
+                    <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-9l-1 1H5v2h14V4z" />
+                    </svg>
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Photo Display */}
+          <div
+            className="flex-1 flex items-center justify-center cursor-grab active:cursor-grabbing select-none"
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={() => setIsDragging(false)}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
+            <img
+              src={uploadedPhotos[selectedPhotoIndex]}
+              alt={`Photo ${selectedPhotoIndex + 1}`}
+              className="max-w-full max-h-full object-contain"
+              draggable="false"
+            />
+          </div>
+
+          {/* Bottom Bar with Actions */}
+          <div className="flex justify-around items-center p-6 bg-black">
+            <button className="flex flex-col items-center gap-2 text-white hover:opacity-75 transition">
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z" />
+              </svg>
+              <span className="text-xs">SHARE</span>
+            </button>
+            <button className="flex flex-col items-center gap-2 text-white hover:opacity-75 transition">
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              </svg>
+              <span className="text-xs">FAVORITE</span>
+            </button>
+            <button className="flex flex-col items-center gap-2 text-white bg-blue-600 hover:opacity-75 transition px-6 py-2 rounded">
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+              </svg>
+              <span className="text-xs">SAVE</span>
+            </button>
+            <button className="flex flex-col items-center gap-2 text-white hover:opacity-75 transition">
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+              </svg>
+              <span className="text-xs">INFO</span>
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

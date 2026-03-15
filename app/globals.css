@@ -24,3 +24,15 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+@keyframes slide-carousel {
+  0%, 25% { transform: translateX(0); }
+  33%, 58% { transform: translateX(-33.33%); }
+  66%, 91% { transform: translateX(-66.66%); }
+  100% { transform: translateX(0); }
+}
+
+.animate-slide {
+  animation: slide-carousel 15s infinite ease-in-out;
+}
