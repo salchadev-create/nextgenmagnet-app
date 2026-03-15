@@ -1,0 +1,4 @@
+Fotoğraf ekleme iconu daha güzelleştirilecek
+Fotoğraf yüklendiğinde info gelmesi lazım
+notlarımda edit kaydet bar aşağıda hep sabit kalacak
+animasyonlar yavaşlatılacak

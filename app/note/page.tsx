@@ -42,9 +42,33 @@ export default function NotePage() {
       {/* Content Area */}
       <div className="flex-1 overflow-auto">
         {/* Note Header */}
-        <div className="px-8 pt-8 pb-4 bg-white">
-          <h1 className="text-3xl font-bold font-sans text-gray-900 mb-2">Notlarım</h1>
-          <p className="text-sm text-gray-500">{new Date().toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+        <div className="px-8 pt-8 pb-4 bg-white flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold font-sans text-gray-900 mb-2">Notlarım</h1>
+            <p className="text-sm text-gray-500">{new Date().toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+          </div>
+          <div className="flex gap-2">
+            {!isEditing ? (
+              <button
+                onClick={handleEdit}
+                className="px-4 py-1.5 border-2 border-orange-500 text-orange-500 font-semibold text-sm rounded hover:bg-orange-50 transition flex items-center justify-center"
+              >
+                Düzenle
+              </button>
+            ) : (
+              <button
+                onClick={handleSave}
+                disabled={!editContent.trim()}
+                className={`px-4 py-1.5 border-2 font-semibold text-sm rounded transition flex items-center justify-center ${
+                  !editContent.trim()
+                    ? 'border-gray-300 text-gray-300 cursor-not-allowed'
+                    : 'border-green-700 bg-green-700 text-white hover:bg-green-800'
+                }`}
+              >
+                Kaydet
+              </button>
+            )}
+          </div>
         </div>
         
         <div className="p-8 h-full">
@@ -64,34 +88,10 @@ export default function NotePage() {
         </div>
       </div>
 
-      {/* Action Header - Fixed at Bottom */}
-      <div className="flex justify-end items-center px-6 py-4 border-t border-gray-200 bg-white gap-3 shrink-0">
-        {!isEditing ? (
-          <button
-            onClick={handleEdit}
-            className="px-6 py-2 border-2 border-orange-500 text-orange-500 font-semibold rounded hover:bg-orange-50 transition w-24 flex items-center justify-center"
-          >
-            Edit
-          </button>
-        ) : (
-          <button
-            onClick={handleSave}
-            disabled={!editContent.trim()}
-            className={`px-6 py-2 border-2 font-semibold rounded transition w-24 flex items-center justify-center ${
-              !editContent.trim()
-                ? 'border-gray-300 text-gray-300 cursor-not-allowed'
-                : 'border-green-700 bg-green-700 text-white hover:bg-green-800'
-            }`}
-          >
-            Kaydet
-          </button>
-        )}
-      </div>
-
       {/* Success Toast */}
       {showSuccess && (
         <motion.div
-          className="fixed bottom-20 right-6 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2"
+          className="fixed bottom-6 right-6 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
