@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 
 export default function DashboardPage() {
@@ -148,7 +149,13 @@ export default function DashboardPage() {
   }, [selectedPhotoIndex]);
 
   return (
-    <div className="flex flex-col h-screen bg-black">
+    <motion.div
+      className="flex flex-col h-screen bg-black"
+      initial={{ y: '-100%', opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: '-100%', opacity: 0 }}
+      transition={{ type: 'spring', damping: 25, stiffness: 200, duration: 0.5 }}
+    >
       <DashboardHeader />
       
       {/* Scrollable Content Section - Photo + Gallery */}
@@ -283,6 +290,6 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

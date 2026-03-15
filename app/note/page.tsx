@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import DashboardHeader from '../../components/dashboard/DashboardHeader';
 
 export default function NotePage() {
@@ -25,7 +26,13 @@ export default function NotePage() {
   // ...existing code...
 
   return (
-    <div className="w-full h-screen bg-white flex flex-col">
+    <motion.div
+      className="w-full h-screen bg-white flex flex-col"
+      initial={{ y: '100%', opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: '100%', opacity: 0 }}
+      transition={{ type: 'spring', damping: 25, stiffness: 200, duration: 0.5 }}
+    >
       {/* Dashboard Header */}
       <DashboardHeader />
 
@@ -77,6 +84,6 @@ export default function NotePage() {
           </button>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
