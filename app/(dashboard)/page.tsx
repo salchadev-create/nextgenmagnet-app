@@ -209,9 +209,9 @@ export default function DashboardPage() {
 
       {/* Photo Modal */}
       {selectedPhotoIndex !== null && (
-        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex flex-col overflow-hidden">
+        <div className="fixed inset-0 z-50 flex flex-col overflow-hidden" style={{ backgroundColor: 'rgba(0, 0, 0, 0.9)' }}>
           {/* Top Bar */}
-          <div className="flex justify-between items-center p-4 bg-black relative shrink-0">
+          <div className="flex justify-between items-center p-4 relative shrink-0" style={{ backgroundColor: 'transparent' }}>
             <button
               onClick={handleCloseModal}
               className="text-white text-3xl hover:opacity-75 transition"
@@ -262,8 +262,8 @@ export default function DashboardPage() {
           </div>
 
           {/* Bottom Bar with Actions */}
-          <div className="flex justify-end items-end p-6 bg-black shrink-0">
-            <button className="flex items-center justify-center text-white bg-gray-700 hover:opacity-75 transition p-3 rounded">
+          <div className="flex justify-end items-end p-6 shrink-0" style={{ backgroundColor: 'transparent' }}>
+            <button className="flex items-center justify-center text-white bg-gray-800 hover:opacity-75 transition p-3 rounded">
               <i className="fas fa-download text-lg"></i>
             </button>
           </div>
