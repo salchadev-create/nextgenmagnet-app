@@ -1,10 +1,11 @@
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Comfortaa } from "next/font/google";
 import "./globals.css";
 import Head from "next/head";
 
-const jakarta = Plus_Jakarta_Sans({ 
+const comfortaa = Comfortaa({ 
+  weight: ["400", "700"],
   subsets: ["latin"],
-  variable: '--font-jakarta' 
+  variable: '--font-comfortaa' 
 });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -13,7 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
       </head>
-      <body className={`${jakarta.variable} font-sans bg-white text-gray-900 min-h-screen flex flex-col`}>
+      <body className={`${comfortaa.variable} font-sans bg-white text-gray-900 min-h-screen flex flex-col`}>
         {children}
       </body>
     </html>

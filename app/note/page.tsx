@@ -8,6 +8,7 @@ export default function NotePage() {
   const [content, setContent] = useState('Bugün harika bir gezi yaptık. İlk durak antik kentti. Güneş tepedeyken sütunların arasından süzülen ışık büyüleyiciydi. Fotoğraf çekmek için mükemmel bir andı.');
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleEdit = () => {
     setEditContent(content);
@@ -20,6 +21,8 @@ export default function NotePage() {
       console.log({ content: editContent, date: new Date().toISOString() });
       setContent(editContent);
       setIsEditing(false);
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
     }
   };
 
@@ -40,7 +43,7 @@ export default function NotePage() {
       <div className="flex-1 overflow-auto">
         {/* Note Header */}
         <div className="px-8 pt-8 pb-4 bg-white">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Notlarım</h1>
+          <h1 className="text-3xl font-bold font-sans text-gray-900 mb-2">Notlarım</h1>
           <p className="text-sm text-gray-500">{new Date().toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
         </div>
         
@@ -77,13 +80,29 @@ export default function NotePage() {
             className={`px-6 py-2 border-2 font-semibold rounded transition w-24 flex items-center justify-center ${
               !editContent.trim()
                 ? 'border-gray-300 text-gray-300 cursor-not-allowed'
-                : 'border-green-500 text-green-500 hover:bg-green-50'
+                : 'border-green-700 bg-green-700 text-white hover:bg-green-800'
             }`}
           >
             Kaydet
           </button>
         )}
       </div>
+
+      {/* Success Toast */}
+      {showSuccess && (
+        <motion.div
+          className="fixed bottom-20 right-6 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.3 }}
+        >
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+          </svg>
+          <span className="font-semibold">Not başarıyla kaydedildi!</span>
+        </motion.div>
+      )}
     </motion.div>
   );
 }

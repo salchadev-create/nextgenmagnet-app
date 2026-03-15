@@ -17,7 +17,7 @@ const config: Config = {
         'theme': '8px',
       },
       fontFamily: {
-        sans: ['var(--font-jakarta)', 'sans-serif'],
+        sans: ['var(--font-comfortaa)', 'sans-serif'],
       },
     },
   },
