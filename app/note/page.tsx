@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import DashboardHeader from '../../components/dashboard/DashboardHeader';
 
@@ -9,6 +9,11 @@ export default function NotePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
+
+  // Scroll to top on page load
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleEdit = () => {
     setEditContent(content);
@@ -30,7 +35,7 @@ export default function NotePage() {
 
   return (
     <motion.div
-      className="w-full h-screen bg-white flex flex-col"
+      className="w-full h-screen bg-white flex flex-col overflow-hidden"
       initial={{ y: '100%', opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: '100%', opacity: 0 }}
@@ -39,10 +44,10 @@ export default function NotePage() {
       {/* Dashboard Header */}
       <DashboardHeader />
 
-      {/* Content Area */}
-      <div className="flex-1 overflow-auto">
+      {/* Content Area - Full Scroll */}
+      <div className="flex-1 overflow-y-auto flex flex-col">
         {/* Note Header */}
-        <div className="px-8 pt-8 pb-4 bg-white flex justify-between items-center">
+        <div className="px-8 pt-8 pb-4 bg-white flex justify-between items-center border-b border-gray-200 shrink-0">
           <div>
             <h1 className="text-3xl font-bold font-sans text-gray-900 mb-2">Notlarım</h1>
             <p className="text-sm text-gray-500">{new Date().toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
@@ -71,17 +76,21 @@ export default function NotePage() {
           </div>
         </div>
         
-        <div className="p-8 h-full">
+        <div className="p-8 flex-1 flex flex-col">
           {isEditing ? (
             <textarea
               autoFocus
               placeholder="Notunuzu yazın..."
               value={editContent}
               onChange={(e) => setEditContent(e.target.value)}
-              className="w-full h-full text-gray-900 bg-transparent border-none outline-none placeholder-gray-400 resize-none text-base leading-relaxed box-border"
+              className="w-full flex-1 text-gray-900 bg-transparent border-none outline-none placeholder-gray-400 resize-none text-base leading-relaxed box-border scrollbar-hide overflow-y-auto"
+              style={{
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+              }}
             />
           ) : (
-            <div className="text-gray-900 text-base leading-relaxed whitespace-pre-wrap" style={{ wordBreak: 'break-word' }}>
+            <div className="text-gray-900 text-base leading-relaxed whitespace-pre-wrap overflow-y-auto scrollbar-hide" style={{ wordBreak: 'break-word', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
               {content || <span className="text-gray-400">Yeni bir not başlayın...</span>}
             </div>
           )}

@@ -29,3 +29,8 @@ body {
 .animate-slide {
   animation: slide-carousel 15s infinite ease-in-out;
 }
+
+/* Hide scrollbar but keep scrolling functionality */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
