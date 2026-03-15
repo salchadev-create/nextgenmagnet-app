@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faEllipsisV ,faEllipsis,faXmark} from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faEllipsisV ,faEllipsis,faXmark, faArrowUpFromBracket} from '@fortawesome/free-solid-svg-icons';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 
 export default function DashboardPage() {
@@ -11,6 +11,8 @@ export default function DashboardPage() {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
   const [showMenu, setShowMenu] = useState(false);
+  const [showUploadSuccess, setShowUploadSuccess] = useState(false);
+  const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragStart, setDragStart] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -27,6 +29,8 @@ export default function DashboardPage() {
         reader.onload = (event) => {
           if (event.target?.result) {
             setUploadedPhotos((prev) => [...prev, event.target?.result as string]);
+            setShowUploadSuccess(true);
+            setTimeout(() => setShowUploadSuccess(false), 3000);
           }
         };
         reader.readAsDataURL(file);
@@ -68,6 +72,8 @@ export default function DashboardPage() {
       const newPhotos = uploadedPhotos.filter((_, index) => index !== selectedPhotoIndex);
       setUploadedPhotos(newPhotos);
       setShowMenu(false);
+      setShowDeleteSuccess(true);
+      setTimeout(() => setShowDeleteSuccess(false), 3000);
 
       // Close modal or go to previous photo
       if (newPhotos.length === 0) {
@@ -191,11 +197,10 @@ export default function DashboardPage() {
             {/* Upload Box - Inside Grid */}
             <div
               onClick={handleUploadClick}
-              className="aspect-square border-2 border-dashed border-gray-300 rounded-none flex items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition"
+              className="aspect-square border-2 border-dashed border-gray-300 rounded-none flex flex-col items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition"
             >
-              <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
+              <FontAwesomeIcon icon={faArrowUpFromBracket} className="text-gray-400 mb-2" size="lg" />
+              <span className="text-xs text-gray-500 font-semibold">Fotoğraf Yükle</span>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -274,7 +279,39 @@ export default function DashboardPage() {
               <i className="fas fa-download text-lg"></i>
             </button>
           </div>
+
+          {/* Delete Success Toast - Inside Modal */}
+          {showDeleteSuccess && (
+            <motion.div
+              className="absolute bottom-6 right-6 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 text-sm"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <span className="font-medium">Fotoğraf başarıyla silindi!</span>
+            </motion.div>
+          )}
         </div>
+      )}
+
+      {/* Upload Success Toast */}
+      {showUploadSuccess && (
+        <motion.div
+          className="fixed bottom-6 right-6 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 text-sm"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.3 }}
+        >
+          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+          </svg>
+          <span className="font-medium">Fotoğraf başarıyla yüklendi!</span>
+        </motion.div>
       )}
     </motion.div>
   );
