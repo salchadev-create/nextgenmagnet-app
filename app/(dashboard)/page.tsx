@@ -209,9 +209,9 @@ export default function DashboardPage() {
 
       {/* Photo Modal */}
       {selectedPhotoIndex !== null && (
-        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex flex-col">
+        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex flex-col overflow-hidden">
           {/* Top Bar */}
-          <div className="flex justify-between items-center p-4 bg-black relative">
+          <div className="flex justify-between items-center p-4 bg-black relative shrink-0">
             <button
               onClick={handleCloseModal}
               className="text-white text-3xl hover:opacity-75 transition"
@@ -246,7 +246,7 @@ export default function DashboardPage() {
 
           {/* Photo Display */}
           <div
-            className="flex-1 flex items-center justify-center cursor-grab active:cursor-grabbing select-none"
+            className="flex-1 flex items-center justify-center cursor-grab active:cursor-grabbing select-none overflow-hidden"
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
             onMouseLeave={() => setIsDragging(false)}
@@ -262,30 +262,9 @@ export default function DashboardPage() {
           </div>
 
           {/* Bottom Bar with Actions */}
-          <div className="flex justify-around items-center p-6 bg-black">
-            <button className="flex flex-col items-center gap-2 text-white hover:opacity-75 transition">
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z" />
-              </svg>
-              <span className="text-xs">SHARE</span>
-            </button>
-            <button className="flex flex-col items-center gap-2 text-white hover:opacity-75 transition">
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-              </svg>
-              <span className="text-xs">FAVORITE</span>
-            </button>
-            <button className="flex flex-col items-center gap-2 text-white bg-blue-600 hover:opacity-75 transition px-6 py-2 rounded">
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-              </svg>
-              <span className="text-xs">SAVE</span>
-            </button>
-            <button className="flex flex-col items-center gap-2 text-white hover:opacity-75 transition">
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
-              </svg>
-              <span className="text-xs">INFO</span>
+          <div className="flex justify-end items-end p-6 bg-black shrink-0">
+            <button className="flex items-center justify-center text-white bg-gray-700 hover:opacity-75 transition p-3 rounded">
+              <i className="fas fa-download text-lg"></i>
             </button>
           </div>
         </div>
