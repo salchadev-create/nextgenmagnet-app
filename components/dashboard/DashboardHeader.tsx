@@ -2,7 +2,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faImages, faBook ,faPenToSquare} from '@fortawesome/free-solid-svg-icons';
+import { faBook } from '@fortawesome/free-solid-svg-icons';
+import { useState, useRef, useEffect } from 'react';
+
 interface DashboardHeaderProps {
   onBookIconClick?: () => void;
 }
@@ -10,8 +12,27 @@ interface DashboardHeaderProps {
 export default function DashboardHeader({ onBookIconClick }: DashboardHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
   
   const isNotePage = pathname === '/note';
+  
+  // Dışarıya tıklandığında menüyü kapat
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMenuOpen]);
   
   const handleIconClick = () => {
     if (isNotePage) {
@@ -23,29 +44,81 @@ export default function DashboardHeader({ onBookIconClick }: DashboardHeaderProp
   };
 
   return (
-    <div className="bg-white border-b border-gray-200 shadow-sm p-3">
+    <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm p-3">
       {/* Top Navigation */}
       <div className="flex justify-between items-center">
         {/* Logo */}
-        <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center shrink-0">
-          <span className="text-white font-bold text-lg">K</span>
+        <div className="relative" ref={menuRef}>
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="w-8 h-8 flex items-center justify-center shrink-0 cursor-pointer hover:opacity-60 transition-opacity"
+          >
+            <Image
+              src="/icons/hamburger.svg"
+              alt="Menu"
+              width={32}
+              height={32}
+            />
+          </button>
+          
+          {/* Dropdown Menu */}
+          {isMenuOpen && (
+            <div className="absolute left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg min-w-32">
+              <button
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  // Logout işlemi burada yapılacak
+                  router.push('/login');
+                }}
+                className="w-full px-4 py-2 flex items-center gap-2 hover:bg-gray-50 transition-colors text-gray-700 hover:text-purple-600 border-0"
+              >
+                <Image
+                  src="/icons/logout.svg"
+                  alt="Logout"
+                  width={20}
+                  height={20}
+                />
+                <span className="text-sm font-medium">Çıkış Yap</span>
+              </button>
+            </div>
+          )}
         </div>
         
         {/* Center Title */}
-        <span className="text-lg font-semibold text-gray-900 flex-1 text-center">Kululu</span>
+        <span className="text-lg font-semibold text-gray-900 flex-1 text-center">Kapadokya Hatırası</span>
         
         {/* Right Icon Button */}
-        <button
-          onClick={handleIconClick}
-          className="cursor-pointer hover:opacity-60 transition-opacity flex items-center justify-center text-gray-600 hover:text-purple-600 shrink-0"
-          title={isNotePage ? "Galeriye dön" : "Notlara git"}
-        >
-          {isNotePage ? (
-            <FontAwesomeIcon icon={faImages} size="lg" />
-          ) : (
-            <FontAwesomeIcon icon={faPenToSquare} size="lg" />
-          )}
-        </button>
+        <div className="flex items-center gap-3 shrink-0">
+          
+          <button
+            onClick={handleIconClick}
+            className="cursor-pointer hover:opacity-60 transition-opacity flex items-center justify-center text-gray-600 hover:text-purple-600"
+            title={isNotePage ? "Galeriye dön" : "Notlara git"}
+          >
+            {isNotePage ? (
+              <Image
+                src="/icons/gallery-icon.svg"
+                alt="Gallery"
+                width={32}
+                height={32}
+              />
+            ) : (
+              <Image
+                src="/icons/notes-icon.svg"
+                alt="Notes"
+                width={32}
+                height={32}
+              />
+            )}
+          </button>
+          {/* <Image
+            src="/icons/logout.svg"
+            alt="Logo Icon"
+            width={32}
+            height={32}
+            className="cursor-pointer hover:opacity-60 transition-opacity"
+          /> */}
+        </div>
       </div>
     </div>
   );

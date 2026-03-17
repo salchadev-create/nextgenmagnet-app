@@ -4,3 +4,5 @@ notlarımda edit kaydet bar aşağıda hep sabit kalacak
 animasyonlar yavaşlatılacak
 
 ikon fontawesome yada başka biri
+
+ilk açıldığında veya bir yere güzel bir harita yerleştir oradan geçiş yapsın

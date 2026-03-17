@@ -34,23 +34,24 @@ export default function NotePage() {
   // ...existing code...
 
   return (
-    <motion.div
-      className="w-full h-screen bg-white flex flex-col overflow-hidden"
-      initial={{ y: '100%', opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      exit={{ y: '100%', opacity: 0 }}
-      transition={{ type: 'spring', damping: 25, stiffness: 200, duration: 0.5 }}
-    >
+    <>
       {/* Dashboard Header */}
       <DashboardHeader />
-
-      {/* Content Area - Full Scroll */}
-      <div className="flex-1 overflow-y-auto flex flex-col">
+      
+      <motion.div
+        className="w-full bg-white flex flex-col flex-1"
+        initial={{ y: '100%', opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: '100%', opacity: 0 }}
+        transition={{ type: 'spring', damping: 25, stiffness: 200, duration: 0.5 }}
+      >
+        {/* Content Area - Full Scroll */}
+        <div className="flex-1 overflow-y-auto flex flex-col pt-16">
         {/* Note Header */}
-        <div className="px-8 pt-8 pb-4 bg-white flex justify-between items-center border-b border-gray-200 shrink-0">
+        <div className="fixed top-14 left-0 right-0 z-40 px-8 py-3 bg-white flex justify-between items-center border-b border-gray-200">
           <div>
-            <h1 className="text-3xl font-bold font-sans text-gray-900 mb-2">Notlarım</h1>
-            <p className="text-sm text-gray-500">{new Date().toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+            <h1 className="text-2xl font-bold font-sans text-gray-900 mb-1">Notlarım</h1>
+            <p className="text-xs text-gray-500">{new Date().toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
           </div>
           <div className="flex gap-2">
             {!isEditing ? (
@@ -112,6 +113,7 @@ export default function NotePage() {
           <span className="font-medium">Not başarıyla kaydedildi!</span>
         </motion.div>
       )}
-    </motion.div>
+      </motion.div>
+    </>
   );
 }
