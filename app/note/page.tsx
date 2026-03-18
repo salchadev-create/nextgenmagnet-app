@@ -57,7 +57,7 @@ export default function NotePage() {
             {!isEditing ? (
               <button
                 onClick={handleEdit}
-                className="px-4 py-1.5 border-2 border-orange-500 text-orange-500 font-semibold text-sm rounded hover:bg-orange-50 transition flex items-center justify-center"
+                className="w-24 px-6 py-2 border-2 border-orange-500 text-orange-500 font-semibold text-sm rounded hover:bg-orange-50 transition flex items-center justify-center"
               >
                 Düzenle
               </button>
@@ -65,7 +65,7 @@ export default function NotePage() {
               <button
                 onClick={handleSave}
                 disabled={!editContent.trim()}
-                className={`px-4 py-1.5 border-2 font-semibold text-sm rounded transition flex items-center justify-center ${
+                className={`w-24 px-6 py-2 border-2 font-semibold text-sm rounded transition flex items-center justify-center ${
                   !editContent.trim()
                     ? 'border-gray-300 text-gray-300 cursor-not-allowed'
                     : 'border-green-700 bg-green-700 text-white hover:bg-green-800'
@@ -96,23 +96,23 @@ export default function NotePage() {
             </div>
           )}
         </div>
-      </div>
+        </div>
 
-      {/* Success Toast */}
-      {showSuccess && (
-        <motion.div
-          className="fixed bottom-6 right-6 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 text-sm"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.3 }}
-        >
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-          </svg>
-          <span className="font-medium">Not başarıyla kaydedildi!</span>
-        </motion.div>
-      )}
+        {/* Success Toast */}
+        {showSuccess && (
+          <motion.div
+            className="fixed bottom-6 right-6 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 text-sm"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            <span className="font-medium">Not başarıyla kaydedildi!</span>
+          </motion.div>
+        )}
       </motion.div>
     </>
   );

@@ -1,10 +1,12 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React, { useState, useCallback } from 'react';
-import { AuthHeader, GoogleLoginButton, AuthFooter } from '@/components/auth';
+import { AuthHeader, GoogleLoginButton } from '@/components/auth';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   const handleGoogleLogin = useCallback(async () => {
@@ -13,46 +15,48 @@ export default function LoginPage() {
       // Firebase Google Login buraya gelecek
       console.log("Google Login tetiklendi");
       // await signInWithGoogle();
+      
+      // Google login başarılıysa anasayfaya yönlendir
+      router.push('/');
     } catch (error) {
       console.error('Google login error:', error);
     } finally {
       setIsGoogleLoading(false);
     }
-  }, []);
+  }, [router]);
 
   return (
-    <div className="relative flex flex-col justify-between min-h-screen p-6 overflow-hidden bg-black">
-      {/* Arka Plan Glow Efekti */}
-      <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-full h-[40%] bg-[radial-gradient(circle,rgba(19,91,236,0.15)_0%,rgba(18,18,18,0)_70%)] pointer-events-none z-0" />
-
-      {/* Branding Section - Top */}
-      <AuthHeader 
-        title="Welcome Back" 
-        subtitle="Log in to your account and continue your journey." 
-      />
-
-      {/* Login Actions - Center */}
-      <main className="relative z-10 w-full max-w-sm mx-auto space-y-6 text-center">
-        <GoogleLoginButton 
-          onClick={handleGoogleLogin}
-          isLoading={isGoogleLoading}
+    <div className="relative flex flex-col items-center justify-between h-full p-6 bg-white">
+      {/* Header - Logo and Title */}
+      <div className="relative z-10 flex flex-col items-center gap-3 w-full max-w-sm pt-4">
+        <AuthHeader 
+          title="Hoşgeldiniz!" 
+          subtitle="Tüm hatıralarınızı bir magnete sığdırdık." 
         />
-        
-        <p className="text-sm text-gray-500">
-          Don't have an account? 
-          <Link 
-            href="/signup"
-            className="text-primary font-semibold hover:underline ml-1"
-          >
-            Sign up
-          </Link>
-        </p>
-      </main>
-
-      {/* Footer - Bottom */}
-      <div className="relative z-10 text-center">
-        <AuthFooter brandName="Souvenir" />
       </div>
+
+      {/* Center - Login Actions */}
+      <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-sm">
+        <div className="w-full space-y-6 text-center">
+          <GoogleLoginButton 
+            onClick={handleGoogleLogin}
+            isLoading={isGoogleLoading}
+          />
+          
+          <p className="text-sm text-gray-500">
+            Hesabınız yok mu? 
+            <Link 
+              href="/signup"
+              className="text-primary font-semibold hover:underline ml-1"
+            >
+              Kayıt Ol
+            </Link>
+          </p>
+        </div>
+      </div>
+
+      {/* Bottom Spacer */}
+      <div className="h-0" />
     </div>
   );
 }

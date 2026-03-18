@@ -3,7 +3,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faEllipsisV ,faEllipsis,faXmark, faArrowUpFromBracket} from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faEllipsisV ,faEllipsis,faXmark } from '@fortawesome/free-solid-svg-icons';
+import Image from 'next/image';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 
 export default function DashboardPage() {
@@ -204,7 +205,7 @@ export default function DashboardPage() {
               onClick={handleUploadClick}
               className="aspect-square border-2 border-dashed border-gray-300 rounded-none flex flex-col items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition"
             >
-              <FontAwesomeIcon icon={faArrowUpFromBracket} className="text-gray-400 mb-2" size="lg" />
+              <Image src="/icons/upload.svg" alt="Upload" width={24} height={24} className="mb-2" />
               <span className="text-xs text-gray-500 font-semibold">Fotoğraf Yükle</span>
               <input
                 ref={fileInputRef}
