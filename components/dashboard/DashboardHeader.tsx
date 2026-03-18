@@ -85,7 +85,20 @@ export default function DashboardHeader({ onBookIconClick }: DashboardHeaderProp
         </div>
         
         {/* Center Title */}
-        <span className="text-lg font-semibold text-gray-900 flex-1 text-center">Kapadokya Hatırası</span>
+        <svg width="180" height="35" viewBox="0 0 180 35" className="flex-1 mx-auto">
+          <defs>
+            <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#001a66" />
+              <stop offset="25%" stopColor="#006680" />
+              <stop offset="50%" stopColor="#4d7d1a" />
+              <stop offset="75%" stopColor="#994d00" />
+              <stop offset="100%" stopColor="#b21600" />
+            </linearGradient>
+          </defs>
+          <text x="90" y="24" textAnchor="middle" fill="url(#textGradient)" fontSize="18" fontWeight="900" letterSpacing="0.5">
+            Kapadokya Hatırası
+          </text>
+        </svg>
         
         {/* Right Icon Button */}
         <div className="flex items-center gap-3 shrink-0">

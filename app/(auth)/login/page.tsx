@@ -32,7 +32,7 @@ export default function LoginPage() {
       <div className="relative z-10 flex flex-col items-center gap-3 w-full max-w-sm pt-24">
         <AuthHeader 
           title="Hoşgeldiniz!" 
-          subtitle="Tüm hatıralarınızı bir magnete sığdırdık." 
+          subtitle="Hatıralarınızı magnete sığdırdık..." 
         />
       </div>
 
