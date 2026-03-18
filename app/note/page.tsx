@@ -51,28 +51,26 @@ export default function NotePage() {
         {/* Note Header */}
         <div className="fixed top-14 left-0 right-0 z-40 px-8 py-3 bg-white flex justify-between items-center border-b border-gray-200">
           <div >
-            <h1 className="text-2xl font-bold font-sans text-gray-900 mb-1">Notlarım</h1>
+            <h1 className="text-2xl font-semibold font-sans text-gray-900 mb-1">Seyir Defteri</h1>
             <p className="text-xs text-gray-500">{new Date().toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
           </div>
           <div className="flex gap-2">
             {!isEditing ? (
               <button
                 onClick={handleEdit}
-                className="w-24 px-6 py-2 border-2 border-orange-500 text-orange-500 font-semibold text-sm rounded hover:bg-orange-50 transition flex items-center justify-center"
+                className="p-2 hover:bg-orange-50 transition rounded"
+                title="Düzenle"
               >
-                Düzenle
+                <img src="/icons/edit.svg" alt="Düzenle" className="w-8 h-8" />
               </button>
             ) : (
               <button
                 onClick={handleSave}
                 disabled={!editContent.trim()}
-                className={`w-24 px-6 py-2 border-2 font-semibold text-sm rounded transition flex items-center justify-center ${
-                  !editContent.trim()
-                    ? 'border-gray-300 text-gray-300 cursor-not-allowed'
-                    : 'border-green-700 bg-green-700 text-white hover:bg-green-800'
-                }`}
+                className="p-2 transition rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-50"
+                title="Kaydet"
               >
-                Kaydet
+                <img src="/icons/save.svg" alt="Kaydet" className="w-7 h-7" />
               </button>
             )}
           </div>
