@@ -3,7 +3,7 @@ import { Instagram, Music, Youtube } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-white text-gray-900 py-4 mt-auto border-t border-gray-200">
+    <footer className="bg-white text-gray-900 py-4 border-t border-gray-200 w-full">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex flex-col items-center justify-center">
           {/* Social Media Icons */}
