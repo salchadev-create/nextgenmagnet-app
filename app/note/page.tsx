@@ -39,14 +39,14 @@ export default function NotePage() {
       <DashboardHeader />
       
       <motion.div
-        className="w-full bg-white flex flex-col flex-1"
+        className="w-full bg-white flex flex-col flex-1 h-screen"
         initial={{ y: '100%', opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: '100%', opacity: 0 }}
         transition={{ type: 'spring', damping: 25, stiffness: 200, duration: 0.5 }}
       >
         {/* Content Area - Full Scroll */}
-        <div className="flex-1 overflow-y-auto flex flex-col pt-16">
+        <div className="flex-1 flex flex-col pt-16 overflow-hidden">
         {/* Note Header */}
         <div className="fixed top-14 left-0 right-0 z-40 px-8 py-3 bg-white flex justify-between items-center border-b border-gray-200">
           <div>
@@ -77,24 +77,26 @@ export default function NotePage() {
           </div>
         </div>
         
-        <div className="p-8 flex-1 flex flex-col">
-          {isEditing ? (
-            <textarea
-              autoFocus
-              placeholder="Notunuzu yazın..."
-              value={editContent}
-              onChange={(e) => setEditContent(e.target.value)}
-              className="w-full flex-1 text-gray-900 bg-transparent border-none outline-none placeholder-gray-400 resize-none text-base leading-relaxed box-border scrollbar-hide overflow-y-auto"
-              style={{
-                scrollbarWidth: 'none',
-                msOverflowStyle: 'none',
-              }}
-            />
-          ) : (
-            <div className="text-gray-900 text-base leading-relaxed whitespace-pre-wrap overflow-y-auto scrollbar-hide" style={{ wordBreak: 'break-word', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-              {content || <span className="text-gray-400">Yeni bir not başlayın...</span>}
-            </div>
-          )}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="flex-1 p-8 flex flex-col overflow-hidden">
+            {isEditing ? (
+              <textarea
+                autoFocus
+                placeholder="Notunuzu yazın..."
+                value={editContent}
+                onChange={(e) => setEditContent(e.target.value)}
+                className="w-full h-full text-gray-900 bg-transparent border-none outline-none placeholder-gray-400 resize-none text-base leading-relaxed box-border overflow-y-auto"
+                style={{
+                  scrollbarWidth: 'none',
+                  msOverflowStyle: 'none',
+                }}
+              />
+            ) : (
+              <div className="text-gray-900 text-base leading-relaxed whitespace-pre-wrap overflow-y-auto h-full" style={{ wordBreak: 'break-word', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                {content || <span className="text-gray-400">Yeni bir not başlayın...</span>}
+              </div>
+            )}
+          </div>
         </div>
         </div>
 
