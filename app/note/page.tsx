@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import DashboardHeader from '../../components/dashboard/DashboardHeader';
+import Footer from '@/components/common/Footer';
 
 export default function NotePage() {
   const [content, setContent] = useState('Bugün harika bir gezi yaptık. İlk durak antik kentti. Güneş tepedeyken sütunların arasından süzülen ışık büyüleyiciydi. Fotoğraf çekmek için mükemmel bir andı.');
@@ -49,7 +50,7 @@ export default function NotePage() {
         <div className="flex-1 flex flex-col pt-16 overflow-hidden">
         {/* Note Header */}
         <div className="fixed top-14 left-0 right-0 z-40 px-8 py-3 bg-white flex justify-between items-center border-b border-gray-200">
-          <div>
+          <div >
             <h1 className="text-2xl font-bold font-sans text-gray-900 mb-1">Notlarım</h1>
             <p className="text-xs text-gray-500">{new Date().toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
           </div>
@@ -116,6 +117,10 @@ export default function NotePage() {
           </motion.div>
         )}
       </motion.div>
+
+      <div className='px-6'>
+          <Footer />
+        </div>
     </>
   );
 }

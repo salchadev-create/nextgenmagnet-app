@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState, useCallback } from 'react';
 import { AuthHeader, GoogleLoginButton } from '@/components/auth';
+import Footer from '@/components/common/Footer';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -57,6 +58,8 @@ export default function LoginPage() {
 
       {/* Bottom Spacer */}
       <div className="h-0" />
+
+      <Footer />
     </div>
   );
 }

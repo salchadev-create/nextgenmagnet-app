@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faEllipsisV ,faEllipsis,faXmark } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
+import Footer from '@/components/common/Footer';
 
 export default function DashboardPage() {
   const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
@@ -218,6 +219,10 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+        <div className='px-6 mt-16'>
+          <Footer />
+        </div>
+      
       </div>
 
       {/* Photo Modal */}
@@ -319,6 +324,8 @@ export default function DashboardPage() {
           <span className="font-medium">Fotoğraf başarıyla yüklendi!</span>
         </motion.div>
       )}
+
+      
     </motion.div>
   );
 }

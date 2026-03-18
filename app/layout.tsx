@@ -1,7 +1,6 @@
 import { Comfortaa } from "next/font/google";
 import "./globals.css";
 import Head from "next/head";
-import Footer from "@/components/common/Footer";
 
 const comfortaa = Comfortaa({ 
   weight: ["400", "700"],
@@ -19,7 +18,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="flex-1">
           {children}
         </main>
-        <Footer />
       </body>
     </html>
   );
