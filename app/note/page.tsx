@@ -51,7 +51,7 @@ export default function NotePage() {
         {/* Note Header */}
         <div className="fixed top-14 left-0 right-0 z-40 px-8 py-3 bg-white flex justify-between items-center border-b border-gray-200">
           <div >
-            <h1 className="text-2xl font-semibold font-sans text-gray-900 mb-1">Seyir Defteri</h1>
+            <h1 className="text-xl font-semibold font-sans text-gray-900 mb-1">Seyir Defteri</h1>
             <p className="text-xs text-gray-500">{new Date().toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
           </div>
           <div className="flex gap-2">
