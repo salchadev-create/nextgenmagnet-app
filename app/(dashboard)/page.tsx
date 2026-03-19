@@ -1,14 +1,18 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faEllipsisV ,faEllipsis,faXmark } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import Footer from '@/components/common/Footer';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function DashboardPage() {
+  const router = useRouter();
+  const { user, loading } = useAuth();
   const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
@@ -19,6 +23,13 @@ export default function DashboardPage() {
   const [dragStart, setDragStart] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    // Loading seçili değilse ve user yok ise, login sayfasına yönlendir
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [user, loading, router]);
 
   useEffect(() => {
     // 2.5 saniye sonra splash screen'i gizle

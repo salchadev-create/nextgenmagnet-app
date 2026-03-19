@@ -1,6 +1,7 @@
 import { Comfortaa } from "next/font/google";
 import "./globals.css";
 import Head from "next/head";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const comfortaa = Comfortaa({ 
   weight: ["400", "700"],
@@ -15,9 +16,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
       </head>
       <body className={`${comfortaa.variable} font-sans bg-white text-gray-900 min-h-screen flex flex-col`}>
-        <main className="flex-1">
-          {children}
-        </main>
+        <AuthProvider>
+          <main className="flex-1">
+            {children}
+          </main>
+        </AuthProvider>
       </body>
     </html>
   );
