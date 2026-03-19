@@ -18,6 +18,16 @@ export default function DashboardPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragStart, setDragStart] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    // 2.5 saniye sonra splash screen'i gizle
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleUploadClick = () => {
     fileInputRef.current?.click();
@@ -171,7 +181,22 @@ export default function DashboardPage() {
       exit={{ y: '-100%', opacity: 0 }}
       transition={{ type: 'spring', damping: 25, stiffness: 200, duration: 0.5 }}
     >
-      <DashboardHeader />
+      {/* Splash Screen - World Travel GIF */}
+      {showSplash && (
+        <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
+          <div className="flex flex-col items-center gap-4 bg-white rounded-lg p-8">
+            <img 
+              src="/gifs/world_travel.gif" 
+              alt="Loading..." 
+              className="w-48 h-48 bg-white"
+            />
+          </div>
+        </div>
+      )}
+
+      <div className={`transition-opacity duration-500 ${showSplash ? 'opacity-0' : 'opacity-100'}`}>
+        <DashboardHeader />
+      </div>
       
       {/* Scrollable Content Section - Photo + Gallery */}
       <div className="flex-1 overflow-y-auto">
