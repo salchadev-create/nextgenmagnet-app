@@ -9,11 +9,13 @@ import Image from 'next/image';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import Footer from '@/components/common/Footer';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { getOrCreateAppFolder, uploadFileToDrive, listPhotosFromFolder, deleteFileFromDrive, DrivePhoto } from '@/lib/googleDrive';
 
 export default function DashboardPage() {
   const router = useRouter();
   const { user, loading, accessToken } = useAuth();
+  const { bgColor } = useTheme();
 
   // Drive'dan gelen fotoğraflar (id + src URL içerir)
   const [photos, setPhotos] = useState<DrivePhoto[]>([]);
@@ -284,7 +286,8 @@ export default function DashboardPage() {
 
   return (
     <motion.div
-      className="flex flex-col h-screen bg-white"
+      className="flex flex-col h-screen"
+      style={{ backgroundColor: bgColor }}
       initial={{ y: '-100%', opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: '-100%', opacity: 0 }}
@@ -309,7 +312,7 @@ export default function DashboardPage() {
       
       {/* Scrollable Content Section - Photo + Gallery */}
       <div className="flex-1 overflow-y-auto">
-        <div className="px-2 pt-2 w-full h-3/4 bg-white relative rounded-lg overflow-hidden">
+        <div className="px-2 pt-2 w-full h-3/4 relative rounded-lg overflow-hidden" style={{ backgroundColor: bgColor }}>
           {isFetchingPhotos && allPhotos.length === 0 ? (
             <div className="w-full h-full flex items-center justify-center bg-gray-100 rounded-lg">
               <svg className="animate-spin w-10 h-10 text-gray-400" fill="none" viewBox="0 0 24 24">
@@ -327,8 +330,8 @@ export default function DashboardPage() {
         </div>
         
         {/* Upload & Gallery Section */}
-        <div className="px-1 py-1">
-          <div className="grid grid-cols-3 gap-1 px-1 py-1">
+        <div className="pb-2">
+          <div className="grid grid-cols-3 gap-2 px-2 py-2">
             {/* Drive ve local preview fotoğraflar */}
             {isFetchingPhotos ? (
               // Yüklenirken iskelet kartlar göster
@@ -378,7 +381,7 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
-        <div className='px-6 mt-16'>
+        <div className='px-2 mt-16'>
           <Footer />
         </div>
       

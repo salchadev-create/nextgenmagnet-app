@@ -1,10 +1,13 @@
 import Link from 'next/link';
-import { Instagram, Music, Youtube } from 'lucide-react';
+import { Instagram, Music, Youtube ,Globe} from 'lucide-react';
+import { useTheme } from '@/contexts/ThemeContext';
 
 export default function Footer() {
+  const { bgColor } = useTheme();
+
   return (
-    <footer className="bg-white text-gray-900 py-4  border-t border-gray-200 w-full">
-      <div className="max-w-7xl mx-auto px-4">
+    <footer className="text-gray-900 py-4 border-t border-gray-200 w-full" style={{ backgroundColor: bgColor }}>
+      <div className="max-w-7xl mx-auto">
         <div className="flex flex-col items-center justify-center">
           {/* Social Media Icons */}
           <div className="flex gap-6 items-center justify-center">
@@ -24,7 +27,7 @@ export default function Footer() {
               className="text-gray-600 hover:text-purple-500 transition-colors duration-300"
               title="TikTok"
             >
-              <Music size={24} />
+              <Youtube size={24} />
             </a>
             <a
               href="https://www.youtube.com"
@@ -33,7 +36,7 @@ export default function Footer() {
               className="text-gray-600 hover:text-purple-500 transition-colors duration-300"
               title="YouTube"
             >
-              <Youtube size={24} />
+              <Globe size={24} />
             </a>
           </div>
           

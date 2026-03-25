@@ -2,6 +2,7 @@ import { Comfortaa } from "next/font/google";
 import "./globals.css";
 import Head from "next/head";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 
 const comfortaa = Comfortaa({ 
   weight: ["400", "700"],
@@ -17,9 +18,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={`${comfortaa.variable} font-sans bg-white text-gray-900 min-h-screen flex flex-col`}>
         <AuthProvider>
-          <main className="flex-1">
-            {children}
-          </main>
+          <ThemeProvider>
+            <main className="flex-1">
+              {children}
+            </main>
+          </ThemeProvider>
         </AuthProvider>
       </body>
     </html>
