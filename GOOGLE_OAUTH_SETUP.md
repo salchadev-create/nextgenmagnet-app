@@ -12,7 +12,27 @@ Google OAuth'u çalıştırmak için Firebase Console'da aşağıdaki adımları
 5. Project name ve support email'i doldurun
 6. **Save** butonuna tıklayın
 
-### 2. OAuth Consent Screen Ayarları
+## Google Drive API Ayarları (Fotoğraf Yükleme)
+
+### 2. Google Drive API'yi Etkinleştirme
+1. [Google Cloud Console](https://console.cloud.google.com)'a gidin
+2. Projenizi seçin: `nextgenmagnet`
+3. Sol menüden **APIs & Services** → **Library**'e tıklayın
+4. Arama kutusuna `Google Drive API` yazın
+5. **Google Drive API** kartına tıklayın → **Enable** butonuna basın
+
+### 3. OAuth Consent Screen – Drive Scope Ekleme
+1. Sol menüden **APIs & Services** → **OAuth consent screen**'e tıklayın
+2. **Edit App** butonuna tıklayın
+3. **Scopes** adımına geçin → **Add or Remove Scopes** butonuna tıklayın
+4. Aşağıdaki scope'u ekleyin:
+   ```
+   https://www.googleapis.com/auth/drive.file
+   ```
+   > Bu scope yalnızca uygulama tarafından oluşturulan dosyalara erişim verir.
+5. Kaydedin.
+
+### 4. OAuth Consent Screen Ayarları
 1. Google Cloud Console'a [buradan](https://console.cloud.google.com) gidin
 2. Üst kısımda projenizi seçin: `nextgenmagnet`
 3. Sol menüden **APIs & Services** → **OAuth consent screen**'e tıklayın

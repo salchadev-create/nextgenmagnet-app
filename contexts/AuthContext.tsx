@@ -20,6 +20,7 @@ interface AuthContextType {
   loading: boolean;
   logout: () => Promise<void>;
   isAuthenticated: boolean;
+  accessToken: string | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -30,6 +31,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [user, setUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+
+  // localStorage'daki token'ı başlangıçta oku
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('google_access_token');
+      if (token) setAccessToken(token);
+    }
+  }, []);
 
   useEffect(() => {
     // Firebase sadece client-side'da initialize edilirse çalışır
@@ -79,6 +89,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       await signOut(auth as Auth);
       setUser(null);
       setUserProfile(null);
+      setAccessToken(null);
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('google_access_token');
+      }
     } catch (error) {
       console.error('Logout error:', error);
       throw error;
@@ -93,6 +107,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         loading,
         logout,
         isAuthenticated: !!user,
+        accessToken,
       }}
     >
       {children}

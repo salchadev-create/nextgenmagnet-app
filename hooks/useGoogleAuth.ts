@@ -5,6 +5,7 @@ import {
   GoogleAuthProvider,
   User,
   Auth,
+  OAuthCredential,
 } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
@@ -12,6 +13,7 @@ import { doc, setDoc, getDoc } from 'firebase/firestore';
 interface AuthResult {
   user: User | null;
   isNewUser: boolean;
+  accessToken: string | null;
 }
 
 export const useGoogleAuth = () => {
@@ -24,10 +26,21 @@ export const useGoogleAuth = () => {
       }
 
       const provider = new GoogleAuthProvider();
+      // Google Drive dosya erişim izni
+      provider.addScope('https://www.googleapis.com/auth/drive.file');
       
       // Google Sign-In popup'ı aç
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
+
+      // Google OAuth access token'ını al (Drive için)
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const accessToken = credential?.accessToken ?? null;
+
+      // Access token'ı localStorage'da sakla
+      if (accessToken) {
+        localStorage.setItem('google_access_token', accessToken);
+      }
 
       // Kullanıcı bilgilerini Firestore'da kontrol et
       const userDocRef = doc(db, 'users', user.uid);
@@ -58,7 +71,7 @@ export const useGoogleAuth = () => {
         );
       }
 
-      return { user, isNewUser };
+      return { user, isNewUser, accessToken };
     } catch (error) {
       console.error('Google Sign-In error:', error);
       throw error;
