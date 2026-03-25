@@ -52,9 +52,9 @@ export default function NotePage() {
       <motion.div
         className="w-full min-h-screen flex flex-col"
         style={{ backgroundColor: bgColor }}
-        initial={{ y: '100%', opacity: 0 }}
+        initial={{ y: '-100%', opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        exit={{ y: '100%', opacity: 0 }}
+        exit={{ y: '-100%', opacity: 0 }}
         transition={{ type: 'spring', damping: 25, stiffness: 200, duration: 0.5 }}
       >
         {/* ─── READ MODE ─── */}

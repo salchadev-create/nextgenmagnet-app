@@ -3,6 +3,7 @@ import "./globals.css";
 import Head from "next/head";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import AuthGuard from "@/components/auth/AuthGuard";
 
 const comfortaa = Comfortaa({ 
   weight: ["400", "700"],
@@ -19,9 +20,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${comfortaa.variable} font-sans bg-white text-gray-900 min-h-screen flex flex-col`}>
         <AuthProvider>
           <ThemeProvider>
-            <main className="flex-1">
-              {children}
-            </main>
+            <AuthGuard>
+              <main className="flex-1">
+                {children}
+              </main>
+            </AuthGuard>
           </ThemeProvider>
         </AuthProvider>
       </body>
