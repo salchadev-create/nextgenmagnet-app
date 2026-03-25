@@ -69,42 +69,38 @@ export default function DashboardHeader({ onBookIconClick }: DashboardHeaderProp
           {/* Dropdown Menu */}
           {isMenuOpen && (
             <div className="absolute left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg min-w-48">
-              {/* User Info */}
+              {/* User Info + Logout */}
               {userProfile && (
-                <div className="px-4 py-3 border-b border-gray-100 text-sm">
-                  <div className="font-semibold text-gray-900">{userProfile.displayName}</div>
-                  <div className="text-gray-500 text-xs truncate">{userProfile.email}</div>
+                <div className="px-4 py-3 border-b border-gray-100 text-sm flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="font-semibold text-gray-900">{userProfile.displayName}</div>
+                    <div className="text-gray-500 text-xs truncate">{userProfile.email}</div>
+                  </div>
+                  <button
+                    onClick={async () => {
+                      setIsMenuOpen(false);
+                      setIsLoggingOut(true);
+                      try {
+                        await logout();
+                      } catch (error) {
+                        console.error('Logout error:', error);
+                      } finally {
+                        window.location.href = '/login';
+                      }
+                    }}
+                    disabled={isLoggingOut}
+                    title={isLoggingOut ? 'Çıkılıyor...' : 'Çıkış Yap'}
+                    className="shrink-0 flex items-center justify-center hover:opacity-60 transition-opacity disabled:opacity-30 disabled:cursor-not-allowed border-0 bg-transparent p-1"
+                  >
+                    <Image
+                      src="/icons/logout.svg"
+                      alt="Logout"
+                      width={20}
+                      height={20}
+                    />
+                  </button>
                 </div>
               )}
-              
-              {/* Logout Button */}
-              <button
-                onClick={async () => {
-                  setIsMenuOpen(false);
-                  setIsLoggingOut(true);
-                  try {
-                    await logout();
-                  } catch (error) {
-                    console.error('Logout error:', error);
-                  } finally {
-                    // Hard navigation: React state tamamen sıfırlanır,
-                    // AuthGuard'ın "user=null + korumalı sayfa" yarış durumu oluşmaz
-                    window.location.href = '/login';
-                  }
-                }}
-                disabled={isLoggingOut}
-                className="w-full px-4 py-2 flex items-center gap-2 hover:bg-red-50 transition-colors text-red-600 hover:text-red-700 border-0 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Image
-                  src="/icons/logout.svg"
-                  alt="Logout"
-                  width={20}
-                  height={20}
-                />
-                <span className="text-sm font-medium">
-                  {isLoggingOut ? 'Çıkılıyor...' : 'Çıkış Yap'}
-                </span>
-              </button>
 
               {/* Background Color Picker */}
               <div className="px-4 py-3 border-t border-gray-100">

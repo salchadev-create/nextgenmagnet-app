@@ -24,7 +24,7 @@ export default function DashboardPage() {
 
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
-  const [showMenu, setShowMenu] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showUploadSuccess, setShowUploadSuccess] = useState(false);
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -155,13 +155,12 @@ export default function DashboardPage() {
 
   const handleCloseModal = () => {
     setSelectedPhotoIndex(null);
-    setShowMenu(false);
+    setShowDeleteConfirm(false);
   };
 
   const handleNextPhoto = () => {
     if (selectedPhotoIndex !== null) {
       setSelectedPhotoIndex((selectedPhotoIndex + 1) % allPhotos.length);
-      setShowMenu(false);
     }
   };
 
@@ -169,7 +168,6 @@ export default function DashboardPage() {
     if (selectedPhotoIndex === null) return;
 
     const photoToDelete = allPhotos[selectedPhotoIndex];
-    setShowMenu(false);
 
     // Önce local state'den kaldır (anlık tepki)
     const newPhotos = photos.filter((_: DrivePhoto, index: number) => index !== selectedPhotoIndex);
@@ -381,25 +379,7 @@ export default function DashboardPage() {
               {selectedPhotoIndex + 1} of {allPhotos.length}
             </span>
             <div className="relative">
-              <button
-                onClick={() => setShowMenu(!showMenu)}
-                className="text-white text-2xl hover:opacity-75 transition"
-              >
-                <FontAwesomeIcon icon={faEllipsis} size="sm" />
-              </button>
-              {showMenu && (
-                <div className="absolute right-0 top-12 bg-gray-800 rounded shadow-lg z-10" onClick={(e) => e.stopPropagation()}>
-                  <button
-                    onClick={handleDeletePhoto}
-                    className="w-full text-left px-6 py-3 text-gray-300 hover:bg-gray-800 transition text-sm font-medium flex items-center gap-2"
-                  >
-                    <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-9l-1 1H5v2h14V4z" />
-                    </svg>
-                    Delete
-                  </button>
-                </div>
-              )}
+              <FontAwesomeIcon icon={faEllipsis} size="xl" className="text-white" />
             </div>
           </div>
 
@@ -422,11 +402,42 @@ export default function DashboardPage() {
           </div>
 
           {/* Bottom Bar with Actions */}
-          <div className="flex justify-end items-end p-6 shrink-0" style={{ backgroundColor: 'transparent' }} onClick={(e) => e.stopPropagation()}>
-            <button className="flex items-center justify-center text-white bg-gray-800 hover:opacity-75 transition p-3 rounded">
-              <i className="fas fa-download text-lg"></i>
+          <div className="flex justify-between items-center px-6 pb-6 shrink-0" style={{ backgroundColor: 'transparent' }} onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="flex items-center justify-center hover:opacity-75 transition p-3 rounded"
+              title="Sil"
+            >
+              <Image src="/icons/trash.svg" alt="Delete" width={28} height={28} />
+            </button>
+            <button className="flex items-center justify-center hover:opacity-75 transition p-3 rounded">
+              <Image src="/icons/download-2.svg" alt="Download" width={28} height={28} />
             </button>
           </div>
+
+          {/* Delete Confirm Popup */}
+          {showDeleteConfirm && (
+            <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/60" onClick={(e) => e.stopPropagation()}>
+              <div className="bg-white rounded-xl shadow-2xl px-6 py-5 mx-6 flex flex-col items-center gap-4">
+                <Image src="/icons/trash.svg" alt="Delete" width={36} height={36} />
+                <p className="text-gray-800 font-semibold text-base text-center">Bu fotoğrafı silmek istediğinize emin misiniz?</p>
+                <div className="flex gap-3 w-full">
+                  <button
+                    onClick={() => setShowDeleteConfirm(false)}
+                    className="flex-1 py-2 rounded-lg border border-gray-300 text-gray-600 text-sm font-medium hover:bg-gray-50 transition"
+                  >
+                    Vazgeç
+                  </button>
+                  <button
+                    onClick={() => { setShowDeleteConfirm(false); handleDeletePhoto(); }}
+                    className="flex-1 py-2 rounded-lg bg-red-600 text-white text-sm font-medium hover:bg-red-700 transition"
+                  >
+                    Sil
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Delete Success Toast - Inside Modal */}
           {showDeleteSuccess && (

@@ -7,7 +7,7 @@ import Footer from '@/components/common/Footer';
 import { useTheme } from '@/contexts/ThemeContext';
 
 const DEFAULT_ENTRY = {
-  heroImage: '/images/seyehat.png',
+  heroImage: '/images/trip-photos/train-view.jpg',
   tags: ['İtalya', 'May 2026'],
   title: 'Amalfi Kıyılarında\nBir Yolculuk',
   dateRange: '14 May 2026',

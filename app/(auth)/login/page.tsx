@@ -9,7 +9,7 @@ import Footer from '@/components/common/Footer';
 import { useGoogleAuth } from '@/hooks/useGoogleAuth';
 import { getDb } from '@/lib/firebase';
 
-type ButtonHint = null | 'no_id' | 'checking' | 'not_found' | 'found';
+type ButtonHint = null | 'no_id' | 'checking' | 'not_found'; // | 'found'
 
 function LoginContent() {
   const searchParams = useSearchParams();
@@ -51,7 +51,7 @@ function LoginContent() {
       }
 
       // 3. ID geçerli → Google ile giriş yap
-      setHint('found');
+      setHint(null);
       localStorage.setItem('product_id', productId);
       await signInWithGoogle();
 
@@ -68,7 +68,7 @@ function LoginContent() {
     no_id:     { text: '⚠ Giriş için geçerli bir ürün bağlantısı gerekli.', color: 'text-amber-500' },
     checking:  { text: '🔍 Ürün kontrol ediliyor...', color: 'text-gray-400' },
     not_found: { text: "✕ Bu ID'ye ait ürün bulunamadı.", color: 'text-red-500' },
-    found:     { text: '✓ Ürün doğrulandı, giriş yapılıyor...', color: 'text-emerald-500' },
+    // found:     { text: '✓ Ürün doğrulandı, giriş yapılıyor...', color: 'text-emerald-500' },
   };
 
   return (
