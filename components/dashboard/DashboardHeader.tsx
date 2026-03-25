@@ -117,7 +117,7 @@ export default function DashboardHeader({ onBookIconClick }: DashboardHeaderProp
             </linearGradient> */}
           </defs>
           <text x="90" y="24" textAnchor="middle" fill="#000000" fontSize="18" fontWeight="900" letterSpacing="0.5">
-            - Kapadokya Hatırası -
+            Kapadokya Hatırası
           </text>
         </svg>
         

@@ -309,9 +309,9 @@ export default function DashboardPage() {
       
       {/* Scrollable Content Section - Photo + Gallery */}
       <div className="flex-1 overflow-y-auto">
-        <div className="w-full h-3/4 bg-gray-200 relative">
+        <div className="px-2 pt-2 w-full h-3/4 bg-white relative rounded-lg overflow-hidden">
           {isFetchingPhotos && allPhotos.length === 0 ? (
-            <div className="w-full h-full flex items-center justify-center bg-gray-100">
+            <div className="w-full h-full flex items-center justify-center bg-gray-100 rounded-lg">
               <svg className="animate-spin w-10 h-10 text-gray-400" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
@@ -321,7 +321,7 @@ export default function DashboardPage() {
             <img
               src={displayPhoto}
               alt="Slideshow photo"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover rounded-lg"
             />
           )}
         </div>
@@ -333,13 +333,13 @@ export default function DashboardPage() {
             {isFetchingPhotos ? (
               // Yüklenirken iskelet kartlar göster
               Array.from({ length: 3 }).map((_, i) => (
-                <div key={`skeleton_${i}`} className="aspect-square bg-gray-200 animate-pulse rounded-none" />
+                <div key={`skeleton_${i}`} className="aspect-square bg-gray-200 animate-pulse rounded-lg" />
               ))
             ) : (
               allPhotos.map((photo, index) => (
                 <div
                   key={photo.id}
-                  className={`aspect-square rounded-none overflow-hidden cursor-pointer hover:opacity-80 transition relative ${photo.id.startsWith('local_preview_') ? 'opacity-60' : ''}`}
+                  className={`aspect-square rounded-lg overflow-hidden cursor-pointer hover:opacity-80 transition relative ${photo.id.startsWith('local_preview_') ? 'opacity-60' : ''}`}
                   onClick={() => handlePhotoClick(index)}
                 >
                   <img
@@ -363,7 +363,7 @@ export default function DashboardPage() {
             {/* Upload Box - Inside Grid */}
             <div
               onClick={handleUploadClick}
-              className="aspect-square border-2 border-dashed border-gray-300 rounded-none flex flex-col items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition"
+              className="aspect-square border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition"
             >
               <Image src="/icons/upload.svg" alt="Upload" width={24} height={24} className="mb-2" />
               <span className="text-xs text-gray-500 font-semibold">Fotoğraf Yükle</span>
