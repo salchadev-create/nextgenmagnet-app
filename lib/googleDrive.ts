@@ -1,11 +1,11 @@
 /**
  * Google Drive API v3 yardımcı fonksiyonları
- * Fotoğrafları kullanıcının Drive'ındaki "Souvenir App" klasörüne yükler
+ * Fotoğrafları kullanıcının Drive'ındaki "nextgenmagnet" klasörüne yükler
  */
 
 const DRIVE_API_URL = 'https://www.googleapis.com/drive/v3';
 const UPLOAD_URL = 'https://www.googleapis.com/upload/drive/v3';
-const FOLDER_NAME = 'Souvenir App';
+const FOLDER_NAME = 'nextgenmagnet';
 
 /**
  * "Souvenir App" klasörünü Drive'da arar, yoksa oluşturur.
@@ -100,4 +100,64 @@ export async function uploadFileToDrive(
 
   const data = await uploadRes.json();
   return data as DriveUploadResult;
+}
+
+/**
+ * Belirtilen dosyayı Google Drive'dan kalıcı olarak siler.
+ */
+export async function deleteFileFromDrive(
+  accessToken: string,
+  fileId: string
+): Promise<void> {
+  const res = await fetch(`${DRIVE_API_URL}/files/${fileId}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  // 204 No Content başarılı silme anlamına gelir
+  if (!res.ok && res.status !== 204) {
+    const err = await res.text();
+    throw new Error(`Drive silme hatası: ${err}`);
+  }
+}
+
+export interface DrivePhoto {
+  id: string;
+  name: string;
+  /** Tarayıcıda doğrudan gösterilecek URL (thumbnail veya download) */
+  src: string;
+}
+
+/**
+ * Belirtilen klasördeki tüm resim dosyalarını listeler ve
+ * her biri için Next.js proxy URL döndürür (tarayıcı CORS kısıtlaması olmadan görüntülenir).
+ */
+export async function listPhotosFromFolder(
+  accessToken: string,
+  folderId: string
+): Promise<DrivePhoto[]> {
+  const q = encodeURIComponent(
+    `'${folderId}' in parents and mimeType contains 'image/' and trashed=false`
+  );
+
+  const res = await fetch(
+    `${DRIVE_API_URL}/files?q=${q}&fields=files(id,name)&orderBy=createdTime&pageSize=100`,
+    {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error(`Drive liste hatası: ${res.statusText}`);
+  }
+
+  const data = await res.json();
+  const files: { id: string; name: string }[] = data.files ?? [];
+
+  // Proxy route üzerinden çekilen URL – tarayıcıdan doğrudan Bearer header gönderilemez
+  return files.map((f) => ({
+    id: f.id,
+    name: f.name,
+    src: `/api/drive-photo?fileId=${f.id}&token=${encodeURIComponent(accessToken)}`,
+  }));
 }
