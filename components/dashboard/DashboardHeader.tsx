@@ -84,10 +84,12 @@ export default function DashboardHeader({ onBookIconClick }: DashboardHeaderProp
                   setIsLoggingOut(true);
                   try {
                     await logout();
-                    router.push('/login');
                   } catch (error) {
                     console.error('Logout error:', error);
-                    setIsLoggingOut(false);
+                  } finally {
+                    // Hard navigation: React state tamamen sıfırlanır,
+                    // AuthGuard'ın "user=null + korumalı sayfa" yarış durumu oluşmaz
+                    window.location.href = '/login';
                   }
                 }}
                 disabled={isLoggingOut}

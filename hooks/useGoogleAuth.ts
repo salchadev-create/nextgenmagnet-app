@@ -4,10 +4,8 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   User,
-  Auth,
-  OAuthCredential,
 } from 'firebase/auth';
-import { auth, db } from '@/lib/firebase';
+import { getFirebaseAuth, getDb } from '@/lib/firebase';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 
 interface AuthResult {
@@ -21,16 +19,15 @@ export const useGoogleAuth = () => {
 
   const signInWithGoogle = useCallback(async (): Promise<AuthResult> => {
     try {
-      if (!auth || !db) {
-        throw new Error('Firebase not initialized');
-      }
+      const firebaseAuth = getFirebaseAuth();
+      const firestore = getDb();
 
       const provider = new GoogleAuthProvider();
       // Google Drive dosya erişim izni
       provider.addScope('https://www.googleapis.com/auth/drive.file');
       
       // Google Sign-In popup'ı aç
-      const result = await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(firebaseAuth, provider);
       const user = result.user;
 
       // Google OAuth access token'ını al (Drive için)
@@ -43,7 +40,7 @@ export const useGoogleAuth = () => {
       }
 
       // Kullanıcı bilgilerini Firestore'da kontrol et
-      const userDocRef = doc(db, 'users', user.uid);
+      const userDocRef = doc(firestore, 'users', user.uid);
       const userDoc = await getDoc(userDocRef);
 
       let isNewUser = false;
@@ -78,13 +75,17 @@ export const useGoogleAuth = () => {
     }
   }, []);
 
-  const handleGoogleLogin = useCallback(async () => {
+  const handleGoogleLogin = useCallback(async (redirectId?: string) => {
     try {
       const result = await signInWithGoogle();
-      
-      // Başarılı login sonrası dashboard'a yönlendir
-      router.push('/');
-      
+
+      // Login başarılı → ID varsa /{id}'e git (orada tekrar kontrol yapılır), yoksa '/'
+      if (redirectId) {
+        router.push(`/${redirectId}`);
+      } else {
+        router.push('/');
+      }
+
       return result;
     } catch (error) {
       console.error('Login error:', error);

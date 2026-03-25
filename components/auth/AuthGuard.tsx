@@ -4,26 +4,31 @@ import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 
-const PUBLIC_PATHS = ['/login'];
+// Giriş gerektirmeyen sayfalar
+const isPublicRoute = (path: string): boolean => {
+  if (path === '/login' || path.startsWith('/login?')) return true;
+  if (path === '/error-page' || path.startsWith('/error-page')) return true;
+  // /{id} → tek segment rotalar (product entry sayfası)
+  if (/^\/[^/]+$/.test(path) && path !== '/login' && !path.startsWith('/error-page')) return true;
+  return false;
+};
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
-  const isPublicPath = PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(p + '/'));
+  const isPublicPath = isPublicRoute(pathname);
 
   useEffect(() => {
     if (loading) return;
-
+    // Giriş yapılmamış + korumalı sayfa → error
     if (!user && !isPublicPath) {
-      router.replace('/login');
-    } else if (user && isPublicPath) {
-      router.replace('/');
+      router.replace('/error-page?reason=no_id');
     }
   }, [user, loading, isPublicPath, router]);
 
-  // Auth durumu yüklenirken boş ekran göster (flash önleme)
+  // Auth yüklenirken spinner
   if (loading) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
@@ -32,11 +37,8 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     );
   }
 
-  // Giriş yapmamış kullanıcı korumalı sayfaya giderse render etme
+  // Giriş yapılmamış kullanıcı korumalı sayfaya giderse render etme
   if (!user && !isPublicPath) return null;
-
-  // Giriş yapmış kullanıcı login sayfasına giderse render etme
-  if (user && isPublicPath) return null;
 
   return <>{children}</>;
 }

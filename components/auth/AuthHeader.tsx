@@ -13,9 +13,9 @@ export const AuthHeader: React.FC<AuthHeaderProps> = ({ title, subtitle }) => {
         <Image
           src="/images/logo.svg"
           alt="Souvenir Logo"
-          width={64}
-          height={64}
-          className="w-32 h-32"
+          width={32}
+          height={32}
+          className="w-24 h-24"
         />
       </div>
       <h1 className="text-3xl font-bold tracking-tight mb-2 text-black">{title}</h1>

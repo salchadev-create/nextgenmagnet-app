@@ -1,30 +1,52 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp, FirebaseApp } from "firebase/app";
+import { initializeApp, getApps, FirebaseApp } from "firebase/app";
 import { getAuth, Auth } from "firebase/auth";
 import { getFirestore, Firestore } from "firebase/firestore";
 
-let app: FirebaseApp | undefined;
-let auth: Auth | undefined;
-let db: Firestore | undefined;
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+};
 
-// Firebase sadece client-side'da initialize edilir
-if (typeof window !== 'undefined') {
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyB-IpjNzqGhss_j5uT-r1q_DTgAcXqlUHg",
-    authDomain: "nextgenmagnet.firebaseapp.com",
-    projectId: "nextgenmagnet",
-    storageBucket: "nextgenmagnet.firebasestorage.app",
-    messagingSenderId: "504037203964",
-    appId: "1:504037203964:web:5d4e25529b9b72cc31dc79",
-    measurementId: "G-EJN5S065M4"
-  };
-
-  // Initialize Firebase
-  app = initializeApp(firebaseConfig);
-  auth = getAuth(app);
-  db = getFirestore(app);
+// Singleton: birden fazla kez initialize etme
+function getFirebaseApp(): FirebaseApp {
+  if (getApps().length > 0) {
+    return getApps()[0];
+  }
+  return initializeApp(firebaseConfig);
 }
 
-export { auth, db, app };
+let _app: FirebaseApp | undefined;
+let _auth: Auth | undefined;
+let _db: Firestore | undefined;
+
+if (typeof window !== 'undefined') {
+  _app = getFirebaseApp();
+  _auth = getAuth(_app);
+  _db = getFirestore(_app, process.env.NEXT_PUBLIC_DATABASE_NAME || '(default)');
+}
+
+// Server-side için de güvenli erişim fonksiyonları
+export function getDb(): Firestore {
+  if (!_db) {
+    const app = getFirebaseApp();
+    _db = getFirestore(app, process.env.NEXT_PUBLIC_DATABASE_NAME || '(default)');
+  }
+  return _db;
+}
+
+export function getFirebaseAuth(): Auth {
+  if (!_auth) {
+    const app = getFirebaseApp();
+    _auth = getAuth(app);
+  }
+  return _auth;
+}
+
+export const app = _app;
+export const auth = _auth;
+export const db = _db;

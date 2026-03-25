@@ -2,8 +2,8 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, onAuthStateChanged, signOut, Auth } from 'firebase/auth';
-import { auth, db } from '@/lib/firebase';
-import { doc, getDoc, Firestore } from 'firebase/firestore';
+import { getFirebaseAuth, getDb } from '@/lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 interface UserProfile {
   uid: string;
@@ -42,19 +42,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   useEffect(() => {
-    // Firebase sadece client-side'da initialize edilirse çalışır
-    if (!auth || !db) {
-      setLoading(false);
-      return;
-    }
+    const firebaseAuth = getFirebaseAuth();
 
-    const unsubscribe = onAuthStateChanged(auth as Auth, async (currentUser) => {
+    const unsubscribe = onAuthStateChanged(firebaseAuth as Auth, async (currentUser) => {
       try {
         if (currentUser) {
           setUser(currentUser);
 
           // Firestore'dan kullanıcı profili getir
-          const userDocRef = doc(db as Firestore, 'users', currentUser.uid);
+          const firestore = getDb();
+          const userDocRef = doc(firestore, 'users', currentUser.uid);
           const userDoc = await getDoc(userDocRef);
 
           if (userDoc.exists()) {
@@ -86,12 +83,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const logout = async () => {
     try {
-      await signOut(auth as Auth);
+      await signOut(getFirebaseAuth() as Auth);
       setUser(null);
       setUserProfile(null);
       setAccessToken(null);
       if (typeof window !== 'undefined') {
         localStorage.removeItem('google_access_token');
+        localStorage.removeItem('product_id');
       }
     } catch (error) {
       console.error('Logout error:', error);
