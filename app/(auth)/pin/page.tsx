@@ -132,7 +132,7 @@ function PinContent() {
         return;
       }
 
-      // Drive'da "happiotag" klasörünü oluştur (veya mevcutsa al)
+      // Drive'da klasörü oluştur (veya mevcutsa al)
       const token = accessToken ?? (typeof window !== 'undefined' ? localStorage.getItem('google_access_token') : null);
       if (!token) {
         setError("✕ Google Drive erişim izni bulunamadı. Lütfen tekrar giriş yapın.");
@@ -140,7 +140,9 @@ function PinContent() {
         return;
       }
 
-      const folderId = await getOrCreateAppFolder(token);
+      // location bilgisini Firestore'dan al (klasör adı için)
+      const location = data?.location as string | undefined;
+      const folderId = await getOrCreateAppFolder(token, location, productId);
 
       // e_mail ve folder_id'yi aynı anda DB'ye yaz
       const firestore2 = getDb();

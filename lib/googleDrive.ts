@@ -1,20 +1,42 @@
 /**
  * Google Drive API v3 yardımcı fonksiyonları
- * Fotoğrafları kullanıcının Drive'ındaki "happiotag" klasörüne yükler
+ * Fotoğrafları kullanıcının Drive'ındaki "happiotag-{location}-{productId}" klasörüne yükler
  */
 
 const DRIVE_API_URL = 'https://www.googleapis.com/drive/v3';
 const UPLOAD_URL = 'https://www.googleapis.com/upload/drive/v3';
-const FOLDER_NAME = 'happiotag';
 
 /**
- * "Souvenir App" klasörünü Drive'da arar, yoksa oluşturur.
- * Klasör ID'sini döner.
+ * Klasör adını oluşturur: happiotag-{location}-{productId}
+ * location veya productId yoksa sadece "happiotag" kullanılır.
  */
-export async function getOrCreateAppFolder(accessToken: string): Promise<string> {
+function buildFolderName(location?: string | null, productId?: string | null): string {
+  const parts: string[] = ['happiotag'];
+  if (location && location.trim()) {
+    // Boşlukları tire ile değiştir, özel karakterleri temizle
+    parts.push(location.trim().replace(/\s+/g, '-').replace(/[^a-zA-Z0-9\-_ğüşıöçĞÜŞİÖÇ]/g, ''));
+  }
+  if (productId && productId.trim()) {
+    parts.push(productId.trim());
+  }
+  return parts.join('-');
+}
+
+/**
+ * Drive'da belirli isimde bir klasörü arar, yoksa oluşturur.
+ * Klasör ID'sini döner.
+ * location ve productId parametreleri klasör adını belirlemek için kullanılır.
+ */
+export async function getOrCreateAppFolder(
+  accessToken: string,
+  location?: string | null,
+  productId?: string | null
+): Promise<string> {
+  const folderName = buildFolderName(location, productId);
+
   // Mevcut klasörü ara
   const searchRes = await fetch(
-    `${DRIVE_API_URL}/files?q=name='${FOLDER_NAME}' and mimeType='application/vnd.google-apps.folder' and trashed=false&fields=files(id,name)`,
+    `${DRIVE_API_URL}/files?q=name='${folderName}' and mimeType='application/vnd.google-apps.folder' and trashed=false&fields=files(id,name)`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -41,7 +63,7 @@ export async function getOrCreateAppFolder(accessToken: string): Promise<string>
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      name: FOLDER_NAME,
+      name: folderName,
       mimeType: 'application/vnd.google-apps.folder',
     }),
   });

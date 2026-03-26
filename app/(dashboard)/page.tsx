@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faEllipsisV ,faEllipsis,faXmark } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
@@ -35,6 +35,7 @@ export default function DashboardPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragStart, setDragStart] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [modalDirection, setModalDirection] = useState(0); // 1: ileri, -1: geri
 
   // Ekranda gösterilecek fotoğraflar: Drive'dakiler + devam eden yükleme preview'ları
   const allPhotos: DrivePhoto[] = [...photos, ...localPreviews];
@@ -58,6 +59,7 @@ export default function DashboardPage() {
         // 1. Firestore'dan folder_id oku
         const productId = typeof window !== 'undefined' ? localStorage.getItem('product_id') : null;
         let folderId: string | null = null;
+        let productLocation: string | null = null;
 
         if (productId) {
           const firestore = getDb();
@@ -65,12 +67,13 @@ export default function DashboardPage() {
           const docSnap = await getDoc(doc(firestore, collectionName, productId));
           if (docSnap.exists()) {
             folderId = docSnap.data()?.folder_id ?? null;
+            productLocation = docSnap.data()?.location ?? null;
           }
         }
 
         // 2. folder_id yoksa Drive'da oluştur ve DB'ye kaydet
         if (!folderId) {
-          folderId = await getOrCreateAppFolder(token);
+          folderId = await getOrCreateAppFolder(token, productLocation, productId);
           if (productId) {
             const firestore = getDb();
             const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
@@ -135,6 +138,7 @@ export default function DashboardPage() {
       // Firestore'dan folder_id oku, yoksa oluştur ve kaydet
       const productId = localStorage.getItem('product_id');
       let folderId: string | null = null;
+      let productLocation: string | null = null;
 
       if (productId) {
         const firestore = getDb();
@@ -142,11 +146,12 @@ export default function DashboardPage() {
         const docSnap = await getDoc(doc(firestore, collectionName, productId));
         if (docSnap.exists()) {
           folderId = docSnap.data()?.folder_id ?? null;
+          productLocation = docSnap.data()?.location ?? null;
         }
       }
 
       if (!folderId) {
-        folderId = await getOrCreateAppFolder(token);
+        folderId = await getOrCreateAppFolder(token, productLocation, productId);
         if (productId) {
           const firestore = getDb();
           const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
@@ -192,6 +197,7 @@ export default function DashboardPage() {
   }, [allPhotos.length]);
 
   const displayPhoto = allPhotos.length > 0 ? allPhotos[currentPhotoIndex].src : '/images/seyehat.png';
+  const displayPhotoKey = allPhotos.length > 0 ? allPhotos[currentPhotoIndex].id : 'default';
 
   const handlePhotoClick = (index: number) => {
     setSelectedPhotoIndex(index);
@@ -204,6 +210,7 @@ export default function DashboardPage() {
 
   const handleNextPhoto = () => {
     if (selectedPhotoIndex !== null) {
+      setModalDirection(1);
       setSelectedPhotoIndex((selectedPhotoIndex + 1) % allPhotos.length);
     }
   };
@@ -241,6 +248,7 @@ export default function DashboardPage() {
 
   const handlePrevPhoto = () => {
     if (selectedPhotoIndex !== null) {
+      setModalDirection(-1);
       setSelectedPhotoIndex((selectedPhotoIndex - 1 + allPhotos.length) % allPhotos.length);
     }
   };
@@ -338,11 +346,18 @@ export default function DashboardPage() {
               </svg>
             </div>
           ) : (
-            <img
-              src={displayPhoto}
-              alt="Slideshow photo"
-              className="w-full h-full object-cover rounded-lg"
-            />
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={displayPhotoKey}
+                src={displayPhoto}
+                alt="Slideshow photo"
+                className="w-full h-full object-cover rounded-lg"
+                initial={{ opacity: 0, x: 60 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -60 }}
+                transition={{ duration: 0.5, ease: 'easeInOut' }}
+              />
+            </AnimatePresence>
           )}
         </div>
         
@@ -436,13 +451,26 @@ export default function DashboardPage() {
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
-            <img
-              src={allPhotos[selectedPhotoIndex].src}
-              alt={allPhotos[selectedPhotoIndex].name || `Photo ${selectedPhotoIndex + 1}`}
-              className="max-w-full max-h-full object-contain"
-              draggable="false"
-              onClick={(e) => e.stopPropagation()}
-            />
+            <AnimatePresence mode="wait" custom={modalDirection}>
+              <motion.img
+                key={selectedPhotoIndex}
+                src={allPhotos[selectedPhotoIndex].src}
+                alt={allPhotos[selectedPhotoIndex].name || `Photo ${selectedPhotoIndex + 1}`}
+                className="max-w-full max-h-full object-contain"
+                draggable="false"
+                custom={modalDirection}
+                variants={{
+                  enter: (dir: number) => ({ opacity: 0, x: dir * 80 }),
+                  center: { opacity: 1, x: 0 },
+                  exit: (dir: number) => ({ opacity: 0, x: dir * -80 }),
+                }}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                onClick={(e) => e.stopPropagation()}
+              />
+            </AnimatePresence>
           </div>
 
           {/* Bottom Bar with Actions */}
