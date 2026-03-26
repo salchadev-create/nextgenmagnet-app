@@ -41,7 +41,7 @@ export default function Footer() {
           </div>
           
           {/* Copyright Text */}
-          <p className="text-xs text-gray-500 mt-4">© 2026 NextGenMagnet. All rights reserved.</p>
+          <p className="text-xs text-gray-500 mt-4">© 2026. HappioTag All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -1,11 +1,11 @@
 /**
  * Google Drive API v3 yardımcı fonksiyonları
- * Fotoğrafları kullanıcının Drive'ındaki "nextgenmagnet" klasörüne yükler
+ * Fotoğrafları kullanıcının Drive'ındaki "happiotag" klasörüne yükler
  */
 
 const DRIVE_API_URL = 'https://www.googleapis.com/drive/v3';
 const UPLOAD_URL = 'https://www.googleapis.com/upload/drive/v3';
-const FOLDER_NAME = 'nextgenmagnet';
+const FOLDER_NAME = 'happiotag';
 
 /**
  * "Souvenir App" klasörünü Drive'da arar, yoksa oluşturur.

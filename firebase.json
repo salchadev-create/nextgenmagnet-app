@@ -6,7 +6,7 @@
     "indexes": "firestore.indexes.json"
   },
   "apphosting": {
-    "backendId": "nextgenmagnet",
+    "backendId": "happiotag",
     "rootDir": "/",
     "ignore": [
       "node_modules",

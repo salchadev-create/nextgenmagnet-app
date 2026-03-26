@@ -6,7 +6,7 @@ Google OAuth'u çalıştırmak için Firebase Console'da aşağıdaki adımları
 
 ### 1. Authentication Ayarları
 1. [Firebase Console](https://console.firebase.google.com)'a gidin
-2. Projenizi (`nextgenmagnet`) seçin
+2. Projenizi (`happiotag`) seçin
 3. Sol menüden **Authentication** → **Sign-in method**'a tıklayın
 4. **Google**'ı bulun ve etkinleştirin (toggle'ı ON yapın)
 5. Project name ve support email'i doldurun
@@ -16,7 +16,7 @@ Google OAuth'u çalıştırmak için Firebase Console'da aşağıdaki adımları
 
 ### 2. Google Drive API'yi Etkinleştirme
 1. [Google Cloud Console](https://console.cloud.google.com)'a gidin
-2. Projenizi seçin: `nextgenmagnet`
+2. Projenizi seçin: `happiotag`
 3. Sol menüden **APIs & Services** → **Library**'e tıklayın
 4. Arama kutusuna `Google Drive API` yazın
 5. **Google Drive API** kartına tıklayın → **Enable** butonuna basın
@@ -34,7 +34,7 @@ Google OAuth'u çalıştırmak için Firebase Console'da aşağıdaki adımları
 
 ### 4. OAuth Consent Screen Ayarları
 1. Google Cloud Console'a [buradan](https://console.cloud.google.com) gidin
-2. Üst kısımda projenizi seçin: `nextgenmagnet`
+2. Üst kısımda projenizi seçin: `happiotag`
 3. Sol menüden **APIs & Services** → **OAuth consent screen**'e tıklayın
 4. User Type olarak **External** seçin
 5. **Create** butonuna tıklayın
@@ -62,13 +62,13 @@ Google OAuth'u çalıştırmak için Firebase Console'da aşağıdaki adımları
 3. **Authorized JavaScript origins** kısmına aşağıdakileri ekleyin:
    - `http://localhost:3000`
    - `http://localhost`
-   - `https://nextgenmagnet.firebaseapp.com` (production için)
+   - `https://happiotag.firebaseapp.com` (production için)
 4. **Save** butonuna tıklayın
 
 ### 6. Authorized Redirect URIs
 1. Aynı sayfada **Authorized redirect URIs** kısmına aşağıdakileri ekleyin:
    - `http://localhost:3000/__/auth/handler`
-   - `https://nextgenmagnet.firebaseapp.com/__/auth/handler`
+   - `https://happiotag.firebaseapp.com/__/auth/handler`
    - `http://localhost/__/auth/handler`
 2. **Save** butonuna tıklayın
 

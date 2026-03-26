@@ -132,7 +132,7 @@ function PinContent() {
         return;
       }
 
-      // Drive'da "nextgenmagnet" klasörünü oluştur (veya mevcutsa al)
+      // Drive'da "happiotag" klasörünü oluştur (veya mevcutsa al)
       const token = accessToken ?? (typeof window !== 'undefined' ? localStorage.getItem('google_access_token') : null);
       if (!token) {
         setError("✕ Google Drive erişim izni bulunamadı. Lütfen tekrar giriş yapın.");

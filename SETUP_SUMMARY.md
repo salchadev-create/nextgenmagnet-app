@@ -61,11 +61,11 @@
 3. **Authorized JavaScript Origins**
    - `http://localhost:3000`
    - `http://localhost`
-   - `https://nextgenmagnet.firebaseapp.com`
+   - `https://happiotag.firebaseapp.com`
 
 4. **Authorized Redirect URIs**
    - `http://localhost:3000/__/auth/handler`
-   - `https://nextgenmagnet.firebaseapp.com/__/auth/handler`
+   - `https://happiotag.firebaseapp.com/__/auth/handler`
 
 ## 📁 Yeni Oluşturulan Dosyalar
 
