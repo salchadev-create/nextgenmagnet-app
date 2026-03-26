@@ -72,20 +72,19 @@ function LoginContent() {
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-between min-h-screen p-6 bg-white">
+    <div className="relative flex flex-col min-h-screen bg-white">
       {showSplash && (
         <div className="fixed inset-0 flex items-center justify-center bg-white z-50" />
       )}
 
-      <div className={`relative z-10 flex flex-col items-center gap-3 w-full max-w-sm pt-24 transition-opacity duration-500 ${showSplash ? 'opacity-0' : 'opacity-100'}`}>
+      {/* İçerik alanı — flex-1 ile footer'ı aşağıya iter */}
+      <div className={`flex-1 flex flex-col items-center justify-center gap-8 px-6 py-12 transition-opacity duration-500 ${showSplash ? 'opacity-0' : 'opacity-100'}`}>
         <AuthHeader
           title="Hoşgeldiniz!"
           subtitle="Hatıralarınızı magnete sığdırdık..."
         />
-      </div>
 
-      <div className={`relative z-10 flex flex-col items-center gap-6 w-full max-w-sm transition-opacity duration-500 ${showSplash ? 'opacity-0' : 'opacity-100'}`}>
-        <div className="w-full space-y-3 text-center">
+        <div className="w-full max-w-sm space-y-3 text-center">
           <GoogleLoginButton
             onClick={handleGoogleLogin}
             isLoading={isGoogleLoading}
@@ -106,7 +105,6 @@ function LoginContent() {
         </div>
       </div>
 
-      <div className="h-0" />
       {!showSplash && <Footer />}
     </div>
   );
