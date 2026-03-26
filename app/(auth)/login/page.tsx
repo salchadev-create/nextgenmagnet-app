@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { doc, getDoc } from 'firebase/firestore';
@@ -50,13 +49,23 @@ function LoginContent() {
         return;
       }
 
-      // 3. ID geçerli → Google ile giriş yap
+      // 3. E-mail kontrolü
+      const data = docSnap.data();
+      const hasEmail = !!(data?.e_mail && String(data.e_mail).trim() !== '');
+
+      // 4. ID geçerli → Google ile giriş yap
       setHint(null);
       localStorage.setItem('product_id', productId);
       await signInWithGoogle();
 
-      // 4. Giriş başarılı → ana sayfaya git
-      router.replace('/');
+      // 5. Giriş başarılı → e-mail durumuna göre yönlendir
+      if (hasEmail) {
+        // E-mail dolu → direkt anasayfaya git
+        router.replace('/');
+      } else {
+        // E-mail boş → PIN sayfasına git
+        router.replace(`/pin?id=${productId}`);
+      }
     } catch (err) {
       console.error('Login hatası:', err);
       setHint(null);
@@ -98,9 +107,9 @@ function LoginContent() {
 
           <p className="text-sm text-gray-500 pt-2">
             Hesabınız yok mu?
-            <Link href="/signup" className="text-primary font-semibold hover:underline ml-1">
+            <a href="https://accounts.google.com/signup" target="_blank" rel="noopener noreferrer" className="text-primary font-semibold hover:underline ml-1">
               Kayıt Ol
-            </Link>
+            </a>
           </p>
         </div>
       </div>

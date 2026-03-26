@@ -11,6 +11,8 @@ import Footer from '@/components/common/Footer';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { getOrCreateAppFolder, uploadFileToDrive, listPhotosFromFolder, deleteFileFromDrive, DrivePhoto } from '@/lib/googleDrive';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { getDb } from '@/lib/firebase';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -52,7 +54,30 @@ export default function DashboardPage() {
 
       try {
         setIsFetchingPhotos(true);
-        const folderId = await getOrCreateAppFolder(token);
+
+        // 1. Firestore'dan folder_id oku
+        const productId = typeof window !== 'undefined' ? localStorage.getItem('product_id') : null;
+        let folderId: string | null = null;
+
+        if (productId) {
+          const firestore = getDb();
+          const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
+          const docSnap = await getDoc(doc(firestore, collectionName, productId));
+          if (docSnap.exists()) {
+            folderId = docSnap.data()?.folder_id ?? null;
+          }
+        }
+
+        // 2. folder_id yoksa Drive'da oluştur ve DB'ye kaydet
+        if (!folderId) {
+          folderId = await getOrCreateAppFolder(token);
+          if (productId) {
+            const firestore = getDb();
+            const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
+            await updateDoc(doc(firestore, collectionName, productId), { folder_id: folderId });
+          }
+        }
+
         const drivePhotos = await listPhotosFromFolder(token, folderId);
         setPhotos(drivePhotos);
       } catch (err) {
@@ -107,7 +132,27 @@ export default function DashboardPage() {
         return;
       }
 
-      const folderId = await getOrCreateAppFolder(token);
+      // Firestore'dan folder_id oku, yoksa oluştur ve kaydet
+      const productId = localStorage.getItem('product_id');
+      let folderId: string | null = null;
+
+      if (productId) {
+        const firestore = getDb();
+        const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
+        const docSnap = await getDoc(doc(firestore, collectionName, productId));
+        if (docSnap.exists()) {
+          folderId = docSnap.data()?.folder_id ?? null;
+        }
+      }
+
+      if (!folderId) {
+        folderId = await getOrCreateAppFolder(token);
+        if (productId) {
+          const firestore = getDb();
+          const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
+          await updateDoc(doc(firestore, collectionName, productId), { folder_id: folderId });
+        }
+      }
 
       for (const { file } of previews) {
         await uploadFileToDrive(token, file, folderId);
@@ -116,8 +161,7 @@ export default function DashboardPage() {
       // Upload bitti: Drive'dan taze liste çek, sonra local preview'ları kaldır
       const token2 = accessToken ?? localStorage.getItem('google_access_token');
       if (token2) {
-        const folderId2 = await getOrCreateAppFolder(token2);
-        const refreshed = await listPhotosFromFolder(token2, folderId2);
+        const refreshed = await listPhotosFromFolder(token2, folderId);
         setPhotos(refreshed);
       }
       setLocalPreviews([]);

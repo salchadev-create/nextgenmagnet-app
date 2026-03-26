@@ -55,11 +55,20 @@ export default function ProductEntryPage() {
         localStorage.setItem('product_id', id);
         setState('redirecting');
 
+        const data = docSnap.data();
+        const hasEmail = !!(data?.e_mail && String(data.e_mail).trim() !== '');
+
         if (user) {
-          // Zaten giriş yapmış → direkt dashboard'a git (ana sayfa)
-          router.replace('/');
+          // Zaten giriş yapmış
+          if (hasEmail) {
+            // E-mail dolu → direkt dashboard'a git
+            router.replace('/');
+          } else {
+            // E-mail boş → PIN sayfasına git
+            router.replace(`/pin?id=${id}`);
+          }
         } else {
-          // Giriş yapmamış → login'e ID ile git
+          // Giriş yapılmamış → her iki durumda da önce login'e git
           router.replace(`/login?id=${id}`);
         }
       } catch (err) {

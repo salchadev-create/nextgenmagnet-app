@@ -9,7 +9,7 @@ interface AuthHeaderProps {
 export const AuthHeader: React.FC<AuthHeaderProps> = ({ title, subtitle }) => {
   return (
     <header className="relative z-10 flex flex-col items-center text-center">
-      <div className="mb-4 p-5 rounded-3xl bg-white shadow-xl shadow-blue-100/70 border border-gray-100">
+      <div className="mb-4 p-5 rounded-3xl bg-white shadow-xl shadow-black/10 border border-gray-100">
         <Image
           src="/images/logo.svg"
           alt="Souvenir Logo"
