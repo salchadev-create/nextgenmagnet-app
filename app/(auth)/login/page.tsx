@@ -3,12 +3,13 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { doc, getDoc } from 'firebase/firestore';
+import { signOut } from 'firebase/auth';
 import { AuthHeader, GoogleLoginButton } from '@/components/auth';
 import Footer from '@/components/common/Footer';
 import { useGoogleAuth } from '@/hooks/useGoogleAuth';
-import { getDb } from '@/lib/firebase';
+import { getDb, getFirebaseAuth } from '@/lib/firebase';
 
-type ButtonHint = null | 'no_id' | 'checking' | 'not_found'; // | 'found'
+type ButtonHint = null | 'no_id' | 'checking' | 'not_found' | 'wrong_email'; // | 'found'
 
 function LoginContent() {
   const searchParams = useSearchParams();
@@ -52,13 +53,29 @@ function LoginContent() {
       // 3. E-mail kontrolü
       const data = docSnap.data();
       const hasEmail = !!(data?.e_mail && String(data.e_mail).trim() !== '');
+      const storedEmail = hasEmail ? String(data.e_mail).trim().toLowerCase() : null;
 
       // 4. ID geçerli → Google ile giriş yap
       setHint(null);
       localStorage.setItem('product_id', productId);
-      await signInWithGoogle();
+      const authResult = await signInWithGoogle();
 
-      // 5. Giriş başarılı → e-mail durumuna göre yönlendir
+      // 5. E-mail dolu ise → giriş yapan kullanıcının e-maili eşleşiyor mu kontrol et
+      if (hasEmail && storedEmail) {
+        const loginEmail = authResult?.user?.email?.trim().toLowerCase() ?? '';
+        if (loginEmail !== storedEmail) {
+          // Eşleşmiyor → oturumu kapat, uyarı göster
+          const firebaseAuth = getFirebaseAuth();
+          await signOut(firebaseAuth);
+          localStorage.removeItem('google_access_token');
+          localStorage.removeItem('product_id');
+          setHint('wrong_email');
+          setIsGoogleLoading(false);
+          return;
+        }
+      }
+
+      // 6. Giriş başarılı → e-mail durumuna göre yönlendir
       if (hasEmail) {
         // E-mail dolu → direkt anasayfaya git
         router.replace('/');
@@ -74,9 +91,10 @@ function LoginContent() {
   };
 
   const hintConfig: Record<Exclude<ButtonHint, null>, { text: string; color: string }> = {
-    no_id:     { text: '⚠ Giriş için geçerli bir ürün bağlantısı gerekli.', color: 'text-amber-500' },
-    checking:  { text: '🔍 Ürün kontrol ediliyor...', color: 'text-gray-400' },
-    not_found: { text: "✕ Bu ID'ye ait ürün bulunamadı.", color: 'text-red-500' },
+    no_id:       { text: '⚠ Giriş için geçerli bir ürün bağlantısı gerekli.', color: 'text-amber-500' },
+    checking:    { text: '🔍 Ürün kontrol ediliyor...', color: 'text-gray-400' },
+    not_found:   { text: "✕ Bu ID'ye ait ürün bulunamadı.", color: 'text-red-500' },
+    wrong_email: { text: '✕ Bu ürün başka bir e-posta adresiyle kayıtlı. Lütfen farklı bir mail adresi ile deneyiniz.', color: 'text-red-500' },
     // found:     { text: '✓ Ürün doğrulandı, giriş yapılıyor...', color: 'text-emerald-500' },
   };
 

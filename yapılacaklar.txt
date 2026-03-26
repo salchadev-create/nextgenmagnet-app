@@ -3,3 +3,9 @@ login sayfası arka plan için iligili mekanın fotoğrafı koyulacak
 public klsörüne mekanların fotoğrafları konulacak ve db den gelen location ile eşleştirilerek arkaplan yapılacak
 logo değiştirilecek.
 anahtarlık içinde makine alınack
+
+firebase apphosting de backedn app ismi nextgenmagnet kaldı o da değişecek.
+dosya yaratırken drive da happiotag-location-random şeklinde yaratmak lazım çünkü aynı kşi birden fazla yerden alabilir.
+
+
+db ye yazarken nfc manager ve burada e_mail falan camelCase kaldı hepsi standartlaştırılacak.
