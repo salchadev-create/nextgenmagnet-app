@@ -1,10 +1,11 @@
-Fotoğraf değiştirme ve slayt animasyon eklenecek yavaş geçmesi için
-login sayfası arka plan için iligili mekanın fotoğrafı koyulacak
-public klsörüne mekanların fotoğrafları konulacak ve db den gelen location ile eşleştirilerek arkaplan yapılacak
+- login sayfası arka plan için iligili mekanın fotoğrafı koyulacak
+
+- public klsörüne mekanların fotoğrafları konulacak ve db den gelen location ile eşleştirilerek arkaplan yapılacak
 logo değiştirilecek.
-anahtarlık içinde makine alınack
 
-firebase apphosting de backedn app ismi nextgenmagnet kaldı o da değişecek.
+- firebase apphosting de backedn app ismi nextgenmagnet kaldı o da değişecek.
 
+-db ye yazarken nfc manager ve burada e_mail falan camelCase kaldı hepsi standartlaştırılacak.
 
-db ye yazarken nfc manager ve burada e_mail falan camelCase kaldı hepsi standartlaştırılacak.
+-Gölyazı , cumalıkızı ve ayvalık için magnet fotoğrafları tasarlanacak.
+

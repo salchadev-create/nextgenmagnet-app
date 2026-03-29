@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useTheme } from '@/contexts/ThemeContext';
 
 interface DashboardHeaderProps {
   onBookIconClick?: () => void;
@@ -15,7 +14,6 @@ export default function DashboardHeader({ onBookIconClick }: DashboardHeaderProp
   const router = useRouter();
   const pathname = usePathname();
   const { logout, userProfile } = useAuth();
-  const { bgColor, setBgColor, bgColors } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -49,7 +47,7 @@ export default function DashboardHeader({ onBookIconClick }: DashboardHeaderProp
   };
 
   return (
-    <div className="sticky top-0 z-50 border-b border-gray-200 shadow-sm p-3" style={{ backgroundColor: bgColor }}>
+    <div className="sticky top-0 z-50 border-b border-gray-200 shadow-sm p-3 bg-white">
       {/* Top Navigation */}
       <div className="flex justify-between items-center">
         {/* Logo */}
@@ -102,25 +100,6 @@ export default function DashboardHeader({ onBookIconClick }: DashboardHeaderProp
                 </div>
               )}
 
-              {/* Background Color Picker */}
-              <div className="px-4 py-3 border-t border-gray-100">
-                <p className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wide">Arka Plan Rengi</p>
-                <div className="grid grid-cols-4 gap-2">
-                  {bgColors.map((color) => (
-                    <button
-                      key={color.value}
-                      title={color.label}
-                      onClick={() => setBgColor(color.value)}
-                      className="w-8 h-8 rounded-full border-2 transition-transform hover:scale-110 focus:outline-none"
-                      style={{
-                        backgroundColor: color.value,
-                        borderColor: bgColor === color.value ? '#6366f1' : '#d1d5db',
-                        boxShadow: bgColor === color.value ? '0 0 0 2px #6366f1' : 'none',
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
             </div>
           )}
         </div>

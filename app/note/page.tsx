@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import DashboardHeader from '../../components/dashboard/DashboardHeader';
 import Footer from '@/components/common/Footer';
-import { useTheme } from '@/contexts/ThemeContext';
-
 const DEFAULT_ENTRY = {
   heroImage: '/images/trip-photos/train-view.jpg',
   tags: ['İtalya', 'May 2026'],
@@ -21,7 +19,6 @@ export default function NotePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [editFields, setEditFields] = useState({ ...DEFAULT_ENTRY });
   const [showSuccess, setShowSuccess] = useState(false);
-  const { bgColor } = useTheme();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -50,8 +47,7 @@ export default function NotePage() {
       <DashboardHeader />
 
       <motion.div
-        className="w-full min-h-screen flex flex-col"
-        style={{ backgroundColor: bgColor }}
+        className="w-full min-h-screen flex flex-col bg-white"
         initial={{ y: '-100%', opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: '-100%', opacity: 0 }}
@@ -74,7 +70,7 @@ export default function NotePage() {
             </div>
 
             {/* Article Card */}
-            <div className="px-4 pt-4 pb-10" style={{ backgroundColor: bgColor }}>
+            <div className="px-4 pt-4 pb-10 bg-white">
               {/* Title */}
               <div className="flex items-center justify-between gap-3 mb-4">
                 <h1
@@ -137,7 +133,7 @@ export default function NotePage() {
             </div>
 
             {/* Footer */}
-            <div className="px-2" style={{ backgroundColor: bgColor }}>
+            <div className="px-2 bg-white">
               <Footer />
             </div>
           </div>

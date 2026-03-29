@@ -1,14 +1,17 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Instagram, Music, Youtube ,Globe} from 'lucide-react';
-import { useTheme } from '@/contexts/ThemeContext';
 
 export default function Footer() {
-  const { bgColor } = useTheme();
-
   return (
-    <footer className="text-gray-900 py-4 border-t border-gray-200 w-full" style={{ backgroundColor: bgColor }}>
+    <footer className="text-gray-900 py-4 border-t border-gray-200 w-full bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col items-center justify-center">
+          {/* Logo */}
+          <div className="mb-4">
+            <Image src="/images/logo.svg" alt="HappioTag Logo" width={120} height={40} />
+          </div>
+
           {/* Social Media Icons */}
           <div className="flex gap-6 items-center justify-center">
             <a

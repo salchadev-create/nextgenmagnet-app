@@ -9,7 +9,6 @@ import Image from 'next/image';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import Footer from '@/components/common/Footer';
 import { useAuth } from '@/contexts/AuthContext';
-import { useTheme } from '@/contexts/ThemeContext';
 import { getOrCreateAppFolder, uploadFileToDrive, listPhotosFromFolder, deleteFileFromDrive, DrivePhoto } from '@/lib/googleDrive';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { getDb } from '@/lib/firebase';
@@ -17,7 +16,6 @@ import { getDb } from '@/lib/firebase';
 export default function DashboardPage() {
   const router = useRouter();
   const { user, loading, accessToken } = useAuth();
-  const { bgColor } = useTheme();
 
   // Drive'dan gelen fotoğraflar (id + src URL içerir)
   const [photos, setPhotos] = useState<DrivePhoto[]>([]);
@@ -326,8 +324,7 @@ export default function DashboardPage() {
 
   return (
     <motion.div
-      className="flex flex-col h-screen"
-      style={{ backgroundColor: bgColor }}
+      className="flex flex-col h-screen bg-white"
       initial={{ y: '-100%', opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: '-100%', opacity: 0 }}
@@ -337,7 +334,7 @@ export default function DashboardPage() {
       
       {/* Scrollable Content Section - Photo + Gallery */}
       <div className="flex-1 overflow-y-auto">
-        <div className="px-2 pt-2 w-full h-3/4 relative rounded-lg overflow-hidden" style={{ backgroundColor: bgColor }}>
+        <div className="px-2 pt-2 w-full h-3/4 relative rounded-lg overflow-hidden bg-white">
           {isFetchingPhotos && allPhotos.length === 0 ? (
             <div className="w-full h-full flex items-center justify-center bg-gray-100 rounded-lg">
               <svg className="animate-spin w-10 h-10 text-gray-400" fill="none" viewBox="0 0 24 24">
