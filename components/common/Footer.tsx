@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="flex flex-col items-center justify-center">
           {/* Logo */}
           <div className="mb-4">
-            <Image src="/images/logo.svg" alt="HappioTag Logo" width={120} height={40} />
+            <Image src="/images/logo.svg" alt="HappioTag Logo" width={90} height={30} />
           </div>
 
           {/* Social Media Icons */}
