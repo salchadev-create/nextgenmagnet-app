@@ -7,6 +7,8 @@ import Footer from '@/components/common/Footer';
 import seyehatImg from '@/app/assets/images/seyehat.png';
 import editIcon from '@/app/assets/icons/edit.svg';
 import Image from 'next/image';
+import { doc, setDoc } from 'firebase/firestore';
+import { getDb } from '@/lib/firebase';
 
 const DEFAULT_ENTRY = {
   heroImage: seyehatImg,
@@ -23,6 +25,7 @@ export default function NotePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [editFields, setEditFields] = useState({ ...DEFAULT_ENTRY });
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -33,12 +36,40 @@ export default function NotePage() {
     setIsEditing(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (editFields.body.trim() || editFields.title.trim()) {
-      setEntry({ ...editFields });
-      setIsEditing(false);
-      setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 3000);
+      const noteContent = editFields.body.trim().substring(0, 5000);
+      
+      try {
+        setIsSaving(true);
+        const productId = localStorage.getItem('product_id');
+        
+        if (!productId) {
+          console.warn('Ürün ID bulunamadı');
+          setEntry({ ...editFields });
+          setIsEditing(false);
+          setShowSuccess(true);
+          setTimeout(() => setShowSuccess(false), 3000);
+          return;
+        }
+
+        const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
+        const firestore = getDb();
+        const docRef = doc(firestore, collectionName, productId);
+        
+        await setDoc(docRef, { note: noteContent }, { merge: true });
+        
+        setEntry({ ...editFields });
+        setIsEditing(false);
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 3000);
+      } catch (error) {
+        console.error('Not kaydedilirken hata:', error);
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 3000);
+      } finally {
+        setIsSaving(false);
+      }
     }
   };
 
@@ -189,24 +220,29 @@ export default function NotePage() {
                   <span className="text-sm font-semibold text-gray-700"></span>
                   <button
                     onClick={handleSave}
-                    disabled={!editFields.body.trim()}
+                    disabled={!editFields.body.trim() || isSaving}
                     className="text-sm font-semibold text-emerald-600 hover:text-emerald-800 transition disabled:opacity-40"
                   >
-                    Kaydet
+                    {isSaving ? 'Kaydediliyor...' : 'Kaydet'}
                   </button>
                 </div>
 
                 {/* Textarea */}
                 <div className="flex-1 px-5 py-4 overflow-hidden">
-                  <textarea
-                    autoFocus
-                    value={editFields.body}
-                    onChange={(e) => setEditFields({ ...editFields, body: e.target.value })}
-                    onPointerDownCapture={(e) => e.stopPropagation()}
-                    className="w-full h-full rounded-xl px-4 py-3 text-sm text-gray-800 bg-white focus:outline-none resize-none leading-relaxed"
-                    style={{ fontFamily: 'var(--font-comfortaa), sans-serif', lineHeight: '1.85', scrollbarWidth: 'none', msOverflowStyle: 'none', border: '1.5px solid #E65100', boxShadow: 'none' }}
-                    placeholder="Gezi yazınızı buraya yazın…"
-                  />
+                  <div className="h-full flex flex-col">
+                    <textarea
+                      autoFocus
+                      value={editFields.body}
+                      onChange={(e) => setEditFields({ ...editFields, body: e.target.value.substring(0, 5000) })}
+                      onPointerDownCapture={(e) => e.stopPropagation()}
+                      className="flex-1 rounded-xl px-4 py-3 text-sm text-gray-800 bg-white focus:outline-none resize-none leading-relaxed"
+                      style={{ fontFamily: 'var(--font-comfortaa), sans-serif', lineHeight: '1.85', scrollbarWidth: 'none', msOverflowStyle: 'none', border: '1.5px solid #E65100', boxShadow: 'none' }}
+                      placeholder="Gezi yazınızı buraya yazın…"
+                    />
+                    <div className="text-xs text-gray-400 mt-2 text-right">
+                      {editFields.body.length}/5000
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             </>

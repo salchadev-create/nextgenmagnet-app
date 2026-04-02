@@ -43,7 +43,7 @@ function PinContent() {
         const docSnap = await getDoc(doc(firestore, collectionName, productId));
         if (docSnap.exists()) {
           const data = docSnap.data();
-          const hasEmail = !!(data?.e_mail && String(data.e_mail).trim() !== '');
+          const hasEmail = !!(data?.eMail && String(data.eMail).trim() !== '');
           if (hasEmail) {
             // Email dolu → dashboard'a git
             router.replace('/');
@@ -154,12 +154,12 @@ function PinContent() {
       const location = data?.location as string | undefined;
       const folderId = await getOrCreateAppFolder(token, location, productId);
 
-      // e_mail ve folder_id'yi aynı anda DB'ye yaz
+      // eMail ve folderId'yi aynı anda DB'ye yaz
       const firestore2 = getDb();
       const collectionName2 = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
       await updateDoc(doc(firestore2, collectionName2, productId), {
-        e_mail: userEmail,
-        folder_id: folderId,
+        eMail: userEmail,
+        folderId: folderId,
       });
 
       // Anasayfaya yönlendir

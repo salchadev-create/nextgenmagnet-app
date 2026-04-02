@@ -19,7 +19,7 @@ import downloadIcon from '@/app/assets/icons/download-2.svg';
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { user, loading, accessToken } = useAuth();
+  const { user, loading, accessToken, setProductLocation: setContextProductLocation } = useAuth();
 
   // Drive'dan gelen fotoğraflar (id + src URL içerir)
   const [photos, setPhotos] = useState<DrivePhoto[]>([]);
@@ -58,7 +58,7 @@ export default function DashboardPage() {
       try {
         setIsFetchingPhotos(true);
 
-        // 1. Firestore'dan folder_id oku
+        // 1. Firestore'dan folderId oku
         const productId = typeof window !== 'undefined' ? localStorage.getItem('product_id') : null;
         let folderId: string | null = null;
         let productLocation: string | null = null;
@@ -68,25 +68,31 @@ export default function DashboardPage() {
           const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
           const docSnap = await getDoc(doc(firestore, collectionName, productId));
           if (docSnap.exists()) {
-            folderId = docSnap.data()?.folder_id ?? null;
+            folderId = docSnap.data()?.folderId ?? null;
             productLocation = docSnap.data()?.location ?? null;
           }
         }
 
-        // 2. folder_id yoksa Drive'da oluştur ve DB'ye kaydet
+        // 2. folderId yoksa Drive'da oluştur ve DB'ye kaydet
         if (!folderId) {
           folderId = await getOrCreateAppFolder(token, productLocation, productId);
           if (productId) {
             const firestore = getDb();
             const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
-            await updateDoc(doc(firestore, collectionName, productId), { folder_id: folderId });
+            await updateDoc(doc(firestore, collectionName, productId), { folderId: folderId });
           }
         }
 
         const drivePhotos = await listPhotosFromFolder(token, folderId);
         setPhotos(drivePhotos);
+        // Location'ı Context'e set et
+        if (productLocation) {
+          setContextProductLocation(productLocation);
+        }
       } catch (err) {
         console.error('Drive fotoğrafları yüklenemedi:', err);
+        // Hata durumunda fallback location
+        setContextProductLocation(null);
       } finally {
         setIsFetchingPhotos(false);
       }
@@ -137,7 +143,7 @@ export default function DashboardPage() {
         return;
       }
 
-      // Firestore'dan folder_id oku, yoksa oluştur ve kaydet
+      // Firestore'dan folderId oku, yoksa oluştur ve kaydet
       const productId = localStorage.getItem('product_id');
       let folderId: string | null = null;
       let productLocation: string | null = null;
@@ -147,7 +153,7 @@ export default function DashboardPage() {
         const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
         const docSnap = await getDoc(doc(firestore, collectionName, productId));
         if (docSnap.exists()) {
-          folderId = docSnap.data()?.folder_id ?? null;
+          folderId = docSnap.data()?.folderId ?? null;
           productLocation = docSnap.data()?.location ?? null;
         }
       }
@@ -157,7 +163,7 @@ export default function DashboardPage() {
         if (productId) {
           const firestore = getDb();
           const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
-          await updateDoc(doc(firestore, collectionName, productId), { folder_id: folderId });
+          await updateDoc(doc(firestore, collectionName, productId), { folderId: folderId });
         }
       }
 

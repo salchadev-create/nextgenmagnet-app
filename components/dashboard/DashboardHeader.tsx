@@ -17,7 +17,7 @@ interface DashboardHeaderProps {
 export default function DashboardHeader({ onBookIconClick }: DashboardHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { logout, userProfile } = useAuth();
+  const { logout, userProfile, productLocation } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -120,7 +120,7 @@ export default function DashboardHeader({ onBookIconClick }: DashboardHeaderProp
             </linearGradient> */}
           </defs>
           <text x="90" y="24" textAnchor="middle" fill="#000000" fontSize="18" fontWeight="900" letterSpacing="0.5">
-            Kapadokya Hatırası
+            {productLocation ? `${productLocation} Hatırası` : 'Gezi Hatırası'}
           </text>
         </svg>
         

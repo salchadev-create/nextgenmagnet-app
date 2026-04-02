@@ -21,6 +21,8 @@ interface AuthContextType {
   logout: () => Promise<void>;
   isAuthenticated: boolean;
   accessToken: string | null;
+  productLocation: string | null;
+  setProductLocation: (location: string | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -32,6 +34,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [productLocation, setProductLocation] = useState<string | null>(null);
 
   // localStorage'daki token'ı başlangıçta oku
   useEffect(() => {
@@ -106,6 +109,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         logout,
         isAuthenticated: !!user,
         accessToken,
+        productLocation,
+        setProductLocation,
       }}
     >
       {children}

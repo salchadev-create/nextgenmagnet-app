@@ -52,8 +52,8 @@ function LoginContent() {
 
       // 3. E-mail kontrolü
       const data = docSnap.data();
-      const hasEmail = !!(data?.e_mail && String(data.e_mail).trim() !== '');
-      const storedEmail = hasEmail ? String(data.e_mail).trim().toLowerCase() : null;
+      const hasEmail = !!(data?.eMail && String(data.eMail).trim() !== '');
+      const storedEmail = hasEmail ? String(data.eMail).trim().toLowerCase() : null;
 
       // 4. ID geçerli → Google ile giriş yap
       setHint(null);

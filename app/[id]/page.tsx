@@ -42,8 +42,8 @@ export default function ProductEntryPage() {
         setState('redirecting');
 
         const data = docSnap.data();
-        const hasEmail = !!(data?.e_mail && String(data.e_mail).trim() !== '');
-        const storedEmail = hasEmail ? String(data.e_mail).trim().toLowerCase() : null;
+        const hasEmail = !!(data?.eMail && String(data.eMail).trim() !== '');
+        const storedEmail = hasEmail ? String(data.eMail).trim().toLowerCase() : null;
 
         if (user) {
           // Zaten giriş yapmış kullanıcı (Senaryo 4)
