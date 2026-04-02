@@ -28,23 +28,9 @@ export default function ProductEntryPage() {
         const collectionName =
           process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
 
-        console.log('=== [id] PAGE DEBUG ===');
-        console.log('id param:', id);
-        console.log('collectionName:', collectionName);
-        console.log('NEXT_PUBLIC_COLLECTION_NAME env:', process.env.NEXT_PUBLIC_COLLECTION_NAME);
-        console.log('NEXT_PUBLIC_FIREBASE_PROJECT_ID env:', process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID);
-
         const firestore = getDb();
-        console.log('firestore instance:', firestore ? `OK (projectId: ${firestore.app.options.projectId}, databaseId: ${(firestore as unknown as {_databaseId?: {databaseId?: string}})._databaseId?.databaseId})` : 'UNDEFINED');
-
         const docRef = doc(firestore, collectionName, id);
-        console.log('docRef path:', docRef.path);
-
         const docSnap = await getDoc(docRef);
-        console.log('docSnap.exists():', docSnap.exists());
-        if (docSnap.exists()) {
-          console.log('docSnap.data():', docSnap.data());
-        }
 
         if (!docSnap.exists()) {
           router.replace('/error-page?reason=not_found');
@@ -57,18 +43,24 @@ export default function ProductEntryPage() {
 
         const data = docSnap.data();
         const hasEmail = !!(data?.e_mail && String(data.e_mail).trim() !== '');
+        const storedEmail = hasEmail ? String(data.e_mail).trim().toLowerCase() : null;
 
         if (user) {
-          // Zaten giriş yapmış
-          if (hasEmail) {
-            // E-mail dolu → direkt dashboard'a git
-            router.replace('/');
-          } else {
-            // E-mail boş → PIN sayfasına git
-            router.replace(`/pin?id=${id}`);
+          // Zaten giriş yapmış kullanıcı (Senaryo 4)
+          if (hasEmail && storedEmail) {
+            // Email kayıtlı varsa, kontrol et
+            const userEmail = user.email?.trim().toLowerCase() ?? '';
+            if (userEmail !== storedEmail) {
+              // Email eşleşmiyor → yetkisiz
+              localStorage.removeItem('product_id');
+              router.replace('/error-page?reason=unauthorized');
+              return;
+            }
           }
+          // Email eşleşiyor veya email kayıtlı değil → dashboard'a git
+          router.replace('/');
         } else {
-          // Giriş yapılmamış → her iki durumda da önce login'e git
+          // Giriş yapılmamış → login'e git (Senaryo 1)
           router.replace(`/login?id=${id}`);
         }
       } catch (err) {

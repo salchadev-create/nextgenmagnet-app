@@ -1,0 +1,46 @@
+createdAt
+April 2, 2026 at 12:00:00 AM UTC+3
+(timestamp)
+
+
+eMail
+""
+(string)
+
+
+folderId
+""
+(string)
+
+
+location
+""
+(string)
+
+
+password
+"123123"
+(string)
+
+
+updatedAt
+April 2, 2026 at 12:00:00 AM UTC+3
+
+db de değerler ilk başta bu şekilde tutuluyor
+
+Senaryo 1:
+Herhangi bir login yokken bu adrese localhost:3000/{documentId} istek atıldığı zaman /login?id={documentId} adresine yönlendirilsin
+
+Senaryo 2:
+Kullanıcı /login?id={documentId} ile login ekranındaysa google ile devam et dediği zaman eğer db de eMail kısmı boş ise pin ekranına git
+db de ilgili documentId nin passwordu doğru girilirse dasborda sayfasına login olarak git giriş yapılan eMail adresini db ye kaydet password yanlış girilirse login olma ve dbye hiçbir
+şey kaydetme.
+
+Senaryo 3:
+Kullanıcı /login?id={documentId} ile login ekranındaysa google ile devam et dediği zaman eğer db de eMail kısmı dolu ise önce giriş yapılan
+eMail adresi ile db de kaydedili olan eMail adresini karşılaştır doğru ise dashboard sayfasına git
+eşleşmiyorsa yetkisiz kullanıcı hatası error sayfasına gitsin.
+
+Senaryo 4: 
+Kullanıcı login iken bu adrese localhost:3000/{documentId} istek attığı zaman yine aynı şekilde db de ilgili document id ile eşleşen kayıtlı eMail mi farklı eMail mi kontrol et
+eşleşiyorsa dashboard sayfasını aç eşleşmiyorsa yine yetkisiz kullanıcı hatası ile error sayfasına git.

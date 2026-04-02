@@ -24,6 +24,10 @@ function ErrorContent() {
       title: 'Erişim Reddedildi',
       desc: 'Bu sayfaya doğrudan erişemezsiniz. Lütfen size özel gönderilen bağlantıyı kullanın.',
     },
+    unauthorized: {
+      title: 'Yetkisiz Kullanıcı',
+      desc: 'Bu ürüne erişim izniniz yok. Farklı bir e-posta adresiyle giriş yapmayı deneyebilirsiniz.',
+    },
   };
 
   const { title, desc } = messages[reason] ?? messages.invalid;

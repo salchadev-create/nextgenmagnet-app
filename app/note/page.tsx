@@ -11,7 +11,7 @@ import Image from 'next/image';
 const DEFAULT_ENTRY = {
   heroImage: seyehatImg,
   tags: ['İtalya', 'May 2026'],
-  title: 'Amalfi Kıyılarında\nBir Yolculuk',
+  title: 'Geziye Dair Notlar',
   dateRange: '14 May 2026',
   location: 'Positano, İtalya',
   pullquote: '"Dünya bir kitaptır ve gezmeyenler sadece bir sayfasını okurlar."',

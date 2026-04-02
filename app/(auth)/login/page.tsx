@@ -9,7 +9,7 @@ import Footer from '@/components/common/Footer';
 import { useGoogleAuth } from '@/hooks/useGoogleAuth';
 import { getDb, getFirebaseAuth } from '@/lib/firebase';
 
-type ButtonHint = null | 'no_id' | 'checking' | 'not_found' | 'wrong_email'; // | 'found'
+type ButtonHint = null | 'no_id' | 'checking' | 'not_found';
 
 function LoginContent() {
   const searchParams = useSearchParams();
@@ -64,13 +64,13 @@ function LoginContent() {
       if (hasEmail && storedEmail) {
         const loginEmail = authResult?.user?.email?.trim().toLowerCase() ?? '';
         if (loginEmail !== storedEmail) {
-          // Eşleşmiyor → oturumu kapat, uyarı göster
+          // Eşleşmiyor → oturumu kapat, error page'e yönlendir (Senaryo 3)
           const firebaseAuth = getFirebaseAuth();
           await signOut(firebaseAuth);
           localStorage.removeItem('google_access_token');
           localStorage.removeItem('product_id');
-          setHint('wrong_email');
           setIsGoogleLoading(false);
+          router.replace('/error-page?reason=unauthorized');
           return;
         }
       }
@@ -94,8 +94,6 @@ function LoginContent() {
     no_id:       { text: '⚠ Giriş için geçerli bir ürün bağlantısı gerekli.', color: 'text-amber-500' },
     checking:    { text: '🔍 Ürün kontrol ediliyor...', color: 'text-gray-400' },
     not_found:   { text: "✕ Bu ID'ye ait ürün bulunamadı.", color: 'text-red-500' },
-    wrong_email: { text: '✕ Bu ürün başka bir e-posta adresiyle kayıtlı. Lütfen farklı bir mail adresi ile deneyiniz.', color: 'text-red-500' },
-    // found:     { text: '✓ Ürün doğrulandı, giriş yapılıyor...', color: 'text-emerald-500' },
   };
 
   return (

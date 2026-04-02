@@ -52,7 +52,7 @@ const STATIC_PHOTOS: LocalPhoto[] = [
 
 const DEFAULT_NOTE = {
   heroImage: g1,
-  title: 'Amalfi Kıyılarında\nBir Yolculuk',
+  title: 'Geziye Dair Notlar',
   dateRange: '14 May 2026',
   location: 'Positano, İtalya',
   pullquote: '"Dünya bir kitaptır ve gezmeyenler sadece bir sayfasını okurlar."',

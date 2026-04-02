@@ -7,6 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 // Giriş gerektirmeyen sayfalar
 const isPublicRoute = (path: string): boolean => {
   if (path === '/login' || path.startsWith('/login?')) return true;
+  if (path === '/pin' || path.startsWith('/pin?')) return true;
   if (path === '/error-page' || path.startsWith('/error-page')) return true;
   // /{id} → tek segment rotalar (product entry sayfası)
   if (/^\/[^/]+$/.test(path) && path !== '/login' && !path.startsWith('/error-page')) return true;

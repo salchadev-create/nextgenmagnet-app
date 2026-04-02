@@ -32,8 +32,11 @@ function PinContent() {
       return;
     }
 
-    // Sayfa açılınca e_mail dolu mu kontrol et → doluysa direkt anasayfaya git
-    const checkEmail = async () => {
+    // Sayfa açılınca:
+    // 1. Kullanıcı giriş yapmış mı kontrol et
+    // 2. E-mail dolu mu kontrol et → doluysa direkt anasayfaya git
+    // 3. Kullanıcı giriş yapmamışsa login'e git
+    const checkEmailAndUser = async () => {
       try {
         const firestore = getDb();
         const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
@@ -42,16 +45,23 @@ function PinContent() {
           const data = docSnap.data();
           const hasEmail = !!(data?.e_mail && String(data.e_mail).trim() !== '');
           if (hasEmail) {
+            // Email dolu → dashboard'a git
             router.replace('/');
+            return;
           }
         }
       } catch {
-        // kontrol başarısız olursa pin sayfasında kalmaya devam et
+        // kontrol başarısız olursa devam et
+      }
+
+      // Kullanıcı giriş yapmamışsa login'e git
+      if (!user) {
+        router.replace(`/login?id=${productId}`);
       }
     };
 
-    checkEmail();
-  }, [productId, router]);
+    checkEmailAndUser();
+  }, [productId, router, user]);
 
   const handleChange = (index: number, value: string) => {
     // Sadece rakam kabul et
