@@ -4,8 +4,12 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import DashboardHeader from '../../components/dashboard/DashboardHeader';
 import Footer from '@/components/common/Footer';
+import seyehatImg from '@/app/assets/images/seyehat.png';
+import editIcon from '@/app/assets/icons/edit.svg';
+import Image from 'next/image';
+
 const DEFAULT_ENTRY = {
-  heroImage: '/images/trip-photos/train-view.jpg',
+  heroImage: seyehatImg,
   tags: ['İtalya', 'May 2026'],
   title: 'Amalfi Kıyılarında\nBir Yolculuk',
   dateRange: '14 May 2026',
@@ -58,10 +62,11 @@ export default function NotePage() {
             {/* Hero Image */}
             <div className="px-2 pt-2">
             <div className="relative w-full overflow-hidden rounded-2xl" style={{ height: '260px' }}>
-              <img
+              <Image
                 src={entry.heroImage}
                 alt="Kapak görseli"
                 className="w-full h-full object-cover"
+                fill
               />
               {/* Gradient overlay */}
               <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.35) 100%)' }} />
@@ -84,7 +89,7 @@ export default function NotePage() {
                   className="shrink-0 p-2 rounded-full hover:bg-gray-100 transition"
                   title="Düzenle"
                 >
-                  <img src="/icons/edit.svg" alt="Düzenle" className="w-7 h-7" />
+                  <Image src={editIcon} alt="Düzenle" className="w-7 h-7" />
                 </button>
               </div>
 

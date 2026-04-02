@@ -12,6 +12,10 @@ import { useAuth } from '@/contexts/AuthContext';
 import { getOrCreateAppFolder, uploadFileToDrive, listPhotosFromFolder, deleteFileFromDrive, DrivePhoto } from '@/lib/googleDrive';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { getDb } from '@/lib/firebase';
+import seyehatImg from '@/app/assets/images/seyehat.png';
+import uploadIcon from '@/app/assets/icons/upload.svg';
+import trashIcon from '@/app/assets/icons/trash.svg';
+import downloadIcon from '@/app/assets/icons/download-2.svg';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -194,7 +198,7 @@ export default function DashboardPage() {
     return () => clearInterval(interval);
   }, [allPhotos.length]);
 
-  const displayPhoto = allPhotos.length > 0 ? allPhotos[currentPhotoIndex].src : '/images/seyehat.png';
+  const displayPhoto: string | any = allPhotos.length > 0 ? allPhotos[currentPhotoIndex].src : seyehatImg;
   const displayPhotoKey = allPhotos.length > 0 ? allPhotos[currentPhotoIndex].id : 'default';
 
   const handlePhotoClick = (index: number) => {
@@ -397,7 +401,7 @@ export default function DashboardPage() {
               onClick={handleUploadClick}
               className="aspect-square border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition"
             >
-              <Image src="/icons/upload.svg" alt="Upload" width={24} height={24} className="mb-2" />
+              <Image src={uploadIcon} alt="Upload" width={24} height={24} className="mb-2" />
               <span className="text-xs text-gray-500 font-semibold">Fotoğraf Yükle</span>
               <input
                 ref={fileInputRef}
@@ -477,10 +481,10 @@ export default function DashboardPage() {
               className="flex items-center justify-center hover:opacity-75 transition p-3 rounded"
               title="Sil"
             >
-              <Image src="/icons/trash.svg" alt="Delete" width={28} height={28} />
+              <Image src={trashIcon} alt="Delete" width={28} height={28} />
             </button>
             <button className="flex items-center justify-center hover:opacity-75 transition p-3 rounded">
-              <Image src="/icons/download-2.svg" alt="Download" width={28} height={28} />
+              <Image src={downloadIcon} alt="Download" width={28} height={28} />
             </button>
           </div>
 
@@ -488,7 +492,7 @@ export default function DashboardPage() {
           {showDeleteConfirm && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/60" onClick={(e) => e.stopPropagation()}>
               <div className="bg-white rounded-xl shadow-2xl px-6 py-5 mx-6 flex flex-col items-center gap-4">
-                <Image src="/icons/trash.svg" alt="Delete" width={36} height={36} />
+                <Image src={trashIcon} width={36} height={36} alt="Delete" />
                 <p className="text-gray-800 font-semibold text-base text-center">Bu fotoğrafı silmek istediğinize emin misiniz?</p>
                 <div className="flex gap-3 w-full">
                   <button

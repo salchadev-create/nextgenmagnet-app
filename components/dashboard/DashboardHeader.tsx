@@ -5,6 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import hamburgerIcon from '@/app/assets/icons/hamburger.svg';
+import logoutIcon from '@/app/assets/icons/logout.svg';
+import galleryIcon from '@/app/assets/icons/gallery-icon.svg';
+import notesIcon from '@/app/assets/icons/notes-icon.svg';
 
 interface DashboardHeaderProps {
   onBookIconClick?: () => void;
@@ -57,7 +61,7 @@ export default function DashboardHeader({ onBookIconClick }: DashboardHeaderProp
             className="w-8 h-8 flex items-center justify-center shrink-0 cursor-pointer hover:opacity-60 transition-opacity"
           >
             <Image
-              src="/icons/hamburger.svg"
+              src={hamburgerIcon}
               alt="Menu"
               width={32}
               height={32}
@@ -91,10 +95,10 @@ export default function DashboardHeader({ onBookIconClick }: DashboardHeaderProp
                     className="shrink-0 flex items-center justify-center hover:opacity-60 transition-opacity disabled:opacity-30 disabled:cursor-not-allowed border-0 bg-transparent p-1"
                   >
                     <Image
-                      src="/icons/logout.svg"
+                      src={logoutIcon}
                       alt="Logout"
-                      width={20}
-                      height={20}
+                      width={24}
+                      height={24}
                     />
                   </button>
                 </div>
@@ -130,14 +134,14 @@ export default function DashboardHeader({ onBookIconClick }: DashboardHeaderProp
           >
             {isNotePage ? (
               <Image
-                src="/icons/gallery-icon.svg"
+                src={galleryIcon}
                 alt="Gallery"
                 width={32}
                 height={32}
               />
             ) : (
               <Image
-                src="/icons/notes-icon.svg"
+                src={notesIcon}
                 alt="Notes"
                 width={32}
                 height={32}

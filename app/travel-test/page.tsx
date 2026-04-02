@@ -6,32 +6,52 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsis, faXmark } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 import Footer from '@/components/common/Footer';
+import g1 from '@/app/assets/images/travel-photos/g1.jpg';
+import g2 from '@/app/assets/images/travel-photos/g2.jpg';
+import g3 from '@/app/assets/images/travel-photos/g3.jpg';
+import g4 from '@/app/assets/images/travel-photos/g4.jpg';
+import g5 from '@/app/assets/images/travel-photos/g5.jpg';
+import g6 from '@/app/assets/images/travel-photos/g6.jpg';
+import g7 from '@/app/assets/images/travel-photos/g7.jpg';
+import g8 from '@/app/assets/images/travel-photos/g8.jpg';
+import g9 from '@/app/assets/images/travel-photos/g9.jpg';
+import g10 from '@/app/assets/images/travel-photos/g10.jpg';
+import g11 from '@/app/assets/images/travel-photos/g11.jpg';
+import g12 from '@/app/assets/images/travel-photos/g12.jpg';
+import seyehatImg from '@/app/assets/images/seyehat.png';
+import editIcon from '@/app/assets/icons/edit.svg';
+import hamburgerIcon from '@/app/assets/icons/hamburger.svg';
+import galleryIcon from '@/app/assets/icons/gallery-icon.svg';
+import notesIcon from '@/app/assets/icons/notes-icon.svg';
+import uploadIcon from '@/app/assets/icons/upload.svg';
+import downloadIcon from '@/app/assets/icons/download-2.svg';
+import trashIcon from '@/app/assets/icons/trash.svg';
 
 type LocalPhoto = {
   id: string;
   name: string;
-  src: string;
+  src: any;
 };
 
 const STATIC_PHOTOS: LocalPhoto[] = [
-  { id: 'g1', name: 'Fotoğraf 1', src: '/images/travel-photos/g1.jpg' },
-  { id: 'g2', name: 'Fotoğraf 2', src: '/images/travel-photos/g2.jpg' },
-  { id: 'g3', name: 'Fotoğraf 3', src: '/images/travel-photos/g3.jpg' },
-  { id: 'g4', name: 'Fotoğraf 4', src: '/images/travel-photos/g4.jpg' },
-  { id: 'g5', name: 'Fotoğraf 5', src: '/images/travel-photos/g5.jpg' },
-  { id: 'g6', name: 'Fotoğraf 6', src: '/images/travel-photos/g6.jpg' },
-  { id: 'g7', name: 'Fotoğraf 7', src: '/images/travel-photos/g7.jpg' },
-  { id: 'g8', name: 'Fotoğraf 8', src: '/images/travel-photos/g8.jpg' },
-  { id: 'g9', name: 'Fotoğraf 9', src: '/images/travel-photos/g9.jpg' },
-  { id: 'g10', name: 'Fotoğraf 10', src: '/images/travel-photos/g10.jpg' },
-  { id: 'g11', name: 'Fotoğraf 11', src: '/images/travel-photos/g11.jpg' },
-  { id: 'g12', name: 'Fotoğraf 12', src: '/images/travel-photos/g12.jpg' },
+  { id: 'g1', name: 'Fotoğraf 1', src: g1 },
+  { id: 'g2', name: 'Fotoğraf 2', src: g2 },
+  { id: 'g3', name: 'Fotoğraf 3', src: g3 },
+  { id: 'g4', name: 'Fotoğraf 4', src: g4 },
+  { id: 'g5', name: 'Fotoğraf 5', src: g5 },
+  { id: 'g6', name: 'Fotoğraf 6', src: g6 },
+  { id: 'g7', name: 'Fotoğraf 7', src: g7 },
+  { id: 'g8', name: 'Fotoğraf 8', src: g8 },
+  { id: 'g9', name: 'Fotoğraf 9', src: g9 },
+  { id: 'g10', name: 'Fotoğraf 10', src: g10 },
+  { id: 'g11', name: 'Fotoğraf 11', src: g11 },
+  { id: 'g12', name: 'Fotoğraf 12', src: g12 },
 ];
 
 // ─── Note Test ─────────────────────────────────────────────────────────────
 
 const DEFAULT_NOTE = {
-  heroImage: '/images/travel-photos/g1.jpg',
+  heroImage: g1,
   title: 'Amalfi Kıyılarında\nBir Yolculuk',
   dateRange: '14 May 2026',
   location: 'Positano, İtalya',
@@ -81,7 +101,12 @@ function NoteTestPanel() {
       {/* Hero Image */}
       <div className="px-2 pt-2">
         <div className="relative w-full overflow-hidden rounded-2xl" style={{ height: '220px' }}>
-          <img src={entry.heroImage} alt="Kapak" className="w-full h-full object-cover" />
+          <Image 
+            src={entry.heroImage} 
+            alt="Kapak" 
+            fill
+            style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+          />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.35) 100%)' }} />
         </div>
       </div>
@@ -101,7 +126,7 @@ function NoteTestPanel() {
             className="shrink-0 p-2 rounded-full hover:bg-gray-100 transition"
             title="Düzenle"
           >
-            <img src="/icons/edit.svg" alt="Düzenle" className="w-7 h-7" />
+            <Image src={editIcon} alt="Düzenle" width={28} height={28} />
           </button>
         </div>
 
@@ -264,7 +289,7 @@ export default function TravelTestPage() {
     return () => clearInterval(interval);
   }, [photos.length]);
 
-  const displayPhoto = photos.length > 0 ? photos[currentPhotoIndex].src : '/images/seyehat.png';
+  const displayPhoto = photos.length > 0 ? photos[currentPhotoIndex].src : seyehatImg;
   const displayPhotoKey = photos.length > 0 ? photos[currentPhotoIndex].id : 'default';
 
   const handlePhotoClick = (index: number) => {
@@ -316,12 +341,16 @@ export default function TravelTestPage() {
       (file) =>
         new Promise<LocalPhoto>((resolve) => {
           const reader = new FileReader();
-          reader.onload = (ev) =>
-            resolve({
-              id: `local_${Date.now()}_${Math.random()}`,
-              name: file.name,
-              src: ev.target?.result as string,
-            });
+          reader.onload = (ev) => {
+            const result = ev.target?.result;
+            if (typeof result === 'string') {
+              resolve({
+                id: `local_${Date.now()}_${Math.random()}`,
+                name: file.name,
+                src: result,
+              });
+            }
+          };
           reader.readAsDataURL(file);
         })
     );
@@ -397,7 +426,7 @@ export default function TravelTestPage() {
         <div className="flex justify-between items-center">
           {/* Left: Hamburger (dekoratif) */}
           <button className="w-8 h-8 flex items-center justify-center shrink-0 hover:opacity-60 transition-opacity">
-            <Image src="/icons/hamburger.svg" alt="Menu" width={32} height={32} />
+            <Image src={hamburgerIcon} alt="Menu" width={32} height={32} />
           </button>
 
           {/* Center: Title */}
@@ -414,9 +443,9 @@ export default function TravelTestPage() {
             title={activeTab === 'note' ? 'Galeriye dön' : 'Notlara git'}
           >
             {activeTab === 'note' ? (
-              <Image src="/icons/gallery-icon.svg" alt="Gallery" width={32} height={32} />
+              <Image src={galleryIcon} width={32} height={32} alt="Gallery" />
             ) : (
-              <Image src="/icons/notes-icon.svg" alt="Notes" width={32} height={32} />
+              <Image src={notesIcon} width={32} height={32} alt="Notes" />
             )}
           </button>
         </div>
@@ -431,16 +460,20 @@ export default function TravelTestPage() {
         {/* Slideshow */}
         <div className="px-2 pt-2 w-full h-3/4 relative rounded-lg overflow-hidden bg-white">
           <AnimatePresence mode="wait">
-            <motion.img
+            <motion.div
               key={displayPhotoKey}
-              src={displayPhoto}
-              alt="Slideshow photo"
-              className="w-full h-full object-cover rounded-lg"
+              className="w-full h-full"
               initial={{ opacity: 0, x: 60 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -60 }}
               transition={{ duration: 0.5, ease: 'easeInOut' }}
-            />
+            >
+              <img
+                src={typeof displayPhoto === 'string' ? displayPhoto : displayPhoto.src}
+                alt="Slideshow photo"
+                className="w-full h-full object-cover rounded-lg"
+              />
+            </motion.div>
           </AnimatePresence>
         </div>
 
@@ -454,7 +487,7 @@ export default function TravelTestPage() {
                 onClick={() => handlePhotoClick(index)}
               >
                 <img
-                  src={photo.src}
+                  src={typeof photo.src === 'string' ? photo.src : photo.src.src}
                   alt={photo.name}
                   className="w-full h-full object-cover"
                 />
@@ -466,7 +499,7 @@ export default function TravelTestPage() {
               onClick={handleUploadClick}
               className="aspect-square border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition"
             >
-              <Image src="/icons/upload.svg" alt="Upload" width={24} height={24} className="mb-2" />
+              <Image src={uploadIcon} alt="Upload" width={32} height={32} className="mb-2" />
               <span className="text-xs text-gray-500 font-semibold">Fotoğraf Ekle</span>
               <input
                 ref={fileInputRef}
@@ -480,7 +513,7 @@ export default function TravelTestPage() {
           </div>
         </div>
 
-        <div className="px-2 mt-16">
+        <div className="px-2">
           <Footer />
         </div>
       </div>
@@ -524,9 +557,9 @@ export default function TravelTestPage() {
             onTouchEnd={handleTouchEnd}
           >
             <AnimatePresence mode="wait" custom={modalDirection}>
-              <motion.img
+            <motion.img
                 key={selectedPhotoIndex}
-                src={photos[selectedPhotoIndex].src}
+                src={typeof photos[selectedPhotoIndex].src === 'string' ? photos[selectedPhotoIndex].src : photos[selectedPhotoIndex].src.src}
                 alt={photos[selectedPhotoIndex].name}
                 className="max-w-full max-h-full object-contain"
                 draggable="false"
@@ -556,10 +589,10 @@ export default function TravelTestPage() {
               className="flex items-center justify-center hover:opacity-75 transition p-3 rounded"
               title="Sil"
             >
-              <Image src="/icons/trash.svg" alt="Delete" width={28} height={28} />
+              <Image src={trashIcon} alt="Delete" width={24} height={24} />
             </button>
             <button className="flex items-center justify-center hover:opacity-75 transition p-3 rounded">
-              <Image src="/icons/download-2.svg" alt="Download" width={28} height={28} />
+              <Image src={downloadIcon} alt="Download" width={24} height={24} />
             </button>
           </div>
 
@@ -570,7 +603,7 @@ export default function TravelTestPage() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="bg-white rounded-xl shadow-2xl px-6 py-5 mx-6 flex flex-col items-center gap-4">
-                <Image src="/icons/trash.svg" alt="Delete" width={36} height={36} />
+                <Image src={trashIcon} alt="Delete" width={32} height={32} />
                 <p className="text-gray-800 font-semibold text-base text-center">
                   Bu fotoğrafı silmek istediğinize emin misiniz?
                 </p>

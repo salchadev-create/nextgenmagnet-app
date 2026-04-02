@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Instagram, Music, Youtube ,Globe} from 'lucide-react';
+import logo from '@/app/assets/images/logo.svg';
 
 export default function Footer() {
   return (
@@ -9,7 +10,7 @@ export default function Footer() {
         <div className="flex flex-col items-center justify-center">
           {/* Logo */}
           <div className="mb-4">
-            <Image src="/images/logo.svg" alt="HappioTag Logo" width={90} height={30} />
+            <Image src={logo} alt="HappioTag Logo" style={{width: '150px', height: '50px'}} width={120} height={40} />
           </div>
 
           {/* Social Media Icons */}
