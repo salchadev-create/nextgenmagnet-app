@@ -56,7 +56,9 @@ const DEFAULT_NOTE = {
   dateRange: '14 May 2026',
   location: 'Positano, İtalya',
   pullquote: '"Dünya bir kitaptır ve gezmeyenler sadece bir sayfasını okurlar."',
-  body: 'Sorrentine Yarımadası\'nın engebeli kıyılarından geçen yolculuğumuz bir rüya gibiydi. Akdeniz\'in pastel tonlardaki cephelerini yumuşatça aydınlatan sabah ışığına uyandık; kelimelerin anlatmaya yetişemeyeceği anlardı bunlar.\n\nÖğleden sonralarımızı labirent gibi çıkmaçlarda kaybolarak geçirdik; gizli trattoria\'lardan taze makarna kokuları süzülürken antik taş duvarları sardıran bougainvillea\'ların canlı renkleri bizi büyüledi.',
+  body: `Bugün zamanın biraz daha yavaş aktığı bir yerdeyim. Gölyazı’nın dar sokaklarında yürürken, gölün kokusuyla karışan taze ekşi mayalı ekmek kokusu tüm yorgunluğumu aldı. Ulu Çınar’ın altında oturup suyun üzerindeki ışık oyunlarını izlemek, sadece bir manzara seyri değil; zihnimdeki karmaşayı sessize alma çabasıydı.
+
+Eski evlerin pencerelerinden sarkan sardunyalar ve kıyıya vuran küçük sandallar, insana sadeleşmenin ne kadar kıymetli olduğunu hatırlatıyor. Yanımda sadece küçük bir kahve ve bu defter var. Şehirdeki o hızlı koşturmacanın aksine, burada sadece "şimdi" var. Bir sonraki durağımı düşünmek yerine, şu an tenime değen rüzgarın tadını çıkarmayı seçiyorum. Bazı rotalar sadece yol üstü durağı değil, insanın kendine dönüş biletidir.`,
 };
 
 const LS_KEY = 'travel_test_note';
