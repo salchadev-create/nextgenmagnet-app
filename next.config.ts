@@ -6,7 +6,3 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
-
-// Note: We're using a custom service worker (public/sw.js) instead of next-pwa
-// to have better control over caching strategies and avoid MIME type issues.
-// See PWAInstaller.tsx for service worker registration.
