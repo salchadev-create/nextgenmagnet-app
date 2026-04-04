@@ -47,7 +47,7 @@ export default function NotePage() {
             const data = docSnap.data();
             const updates: any = {};
             if (data.location) {
-              updates.location = data.location;
+              updates.location = data.location.charAt(0).toUpperCase() + data.location.slice(1);
               const heroImg = LOCATION_HERO_IMAGES[data.location.toLowerCase().trim()];
               if (heroImg) {
                 updates.heroImage = heroImg;

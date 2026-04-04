@@ -23,6 +23,9 @@ export default function DashboardHeader({ onBookIconClick }: DashboardHeaderProp
   const menuRef = useRef<HTMLDivElement>(null);
   
   const isNotePage = pathname === '/note';
+
+  const capitalizeFirst = (str: string) =>
+    str.charAt(0).toUpperCase() + str.slice(1);
   
   // Dışarıya tıklandığında menüyü kapat
   useEffect(() => {
@@ -120,7 +123,7 @@ export default function DashboardHeader({ onBookIconClick }: DashboardHeaderProp
             </linearGradient> */}
           </defs>
           <text x="90" y="24" textAnchor="middle" fill="#000000" fontSize="18" fontWeight="900" letterSpacing="0.5">
-            {productLocation ? `${productLocation} Hatırası` : 'Gezi Hatırası'}
+            {productLocation ? `${capitalizeFirst(productLocation)} Hatırası` : 'Gezi Hatırası'}
           </text>
         </svg>
         
