@@ -1,26 +1,37 @@
-rules_version='2'
+rules_version='2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Products koleksiyonu — herkes okuyabilir (ürün kontrol için)
-    match /products/{productId} {
-      allow read: if true;
+
+    // ─── Admin kontrolü: adminUsers collection'ında kaydı varsa admin ───────
+    function isAdmin() {
+      return request.auth != null &&
+        exists(/databases/$(database)/documents/adminUsers/$(request.auth.uid));
     }
-    
-    // activeTravelProduct koleksiyonu — herkes okuyabilir, giriş yapmış kullanıcılar yazabilir
+
+
+    // ─── locations koleksiyonu ────────────────────────────────────────────
+    match /locations/{locationId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ─── activeTravelProduct koleksiyonu ──────────────────────────────────
     match /activeTravelProduct/{productId} {
       allow read: if true;
       allow write: if request.auth != null;
     }
-    
-    // Kullanıcı verilerine sadece kendi user'lar erişebilir
+    // ─── adminUsers koleksiyonu ───────────────────────────────────────────
+    // Sadece admin kendi kaydını okuyabilir; yazma sadece Firebase Console / Admin SDK ile
+    match /adminUsers/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false; // Sadece Firebase Console / Admin SDK ile yönetilir
+    }
+
+    // ─── users koleksiyonu ────────────────────────────────────────────────
     match /users/{userId} {
-      allow read, write: if request.auth.uid == userId;
+      allow read, write: if request.auth != null && request.auth.uid == userId;
     }
-    
-    // Kullanıcı notları
-    match /users/{userId}/notes/{noteId} {
-      allow read, write: if request.auth.uid == userId;
-    }
+
   }
 }

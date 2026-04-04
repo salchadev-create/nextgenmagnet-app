@@ -38,7 +38,7 @@ function LoginContent() {
 
       try {
         const firestore = getDb();
-        const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
+        const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'activeTravelProduct';
         
         // Timeout ile beraber getDoc yapıştır
         const docSnap = await Promise.race([
@@ -91,7 +91,7 @@ function LoginContent() {
 
       // 2. Ürün verilerini getir
       const firestore = getDb();
-      const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
+      const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'activeTravelProduct';
       
       const docSnap = await Promise.race([
         getDoc(doc(firestore, collectionName, productId)),

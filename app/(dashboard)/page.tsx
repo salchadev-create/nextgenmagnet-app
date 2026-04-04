@@ -65,7 +65,7 @@ export default function DashboardPage() {
 
         if (productId) {
           const firestore = getDb();
-          const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
+          const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'activeTravelProduct';
           const docSnap = await getDoc(doc(firestore, collectionName, productId));
           if (docSnap.exists()) {
             folderId = docSnap.data()?.folderId ?? null;
@@ -78,7 +78,7 @@ export default function DashboardPage() {
           folderId = await getOrCreateAppFolder(token, productLocation, productId);
           if (productId) {
             const firestore = getDb();
-            const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
+            const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'activeTravelProduct';
             await updateDoc(doc(firestore, collectionName, productId), { folderId: folderId });
           }
         }
@@ -158,7 +158,7 @@ export default function DashboardPage() {
 
       if (productId) {
         const firestore = getDb();
-        const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
+        const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'activeTravelProduct';
         const docSnap = await getDoc(doc(firestore, collectionName, productId));
         if (docSnap.exists()) {
           folderId = docSnap.data()?.folderId ?? null;
@@ -170,7 +170,7 @@ export default function DashboardPage() {
         folderId = await getOrCreateAppFolder(token, productLocation, productId);
         if (productId) {
           const firestore = getDb();
-          const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
+          const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'activeTravelProduct';
           await updateDoc(doc(firestore, collectionName, productId), { folderId: folderId });
         }
       }

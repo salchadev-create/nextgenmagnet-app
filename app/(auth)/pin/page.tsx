@@ -39,7 +39,7 @@ function PinContent() {
     const checkEmailAndUser = async () => {
       try {
         const firestore = getDb();
-        const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
+        const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'activeTravelProduct';
         const docSnap = await getDoc(doc(firestore, collectionName, productId));
         if (docSnap.exists()) {
           const data = docSnap.data();
@@ -108,7 +108,7 @@ function PinContent() {
 
     try {
       const firestore = getDb();
-      const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
+      const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'activeTravelProduct';
       const docSnap = await getDoc(doc(firestore, collectionName, productId));
 
       if (!docSnap.exists()) {
@@ -156,7 +156,7 @@ function PinContent() {
 
       // eMail ve folderId'yi aynı anda DB'ye yaz
       const firestore2 = getDb();
-      const collectionName2 = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
+      const collectionName2 = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'activeTravelProduct';
       await updateDoc(doc(firestore2, collectionName2, productId), {
         eMail: userEmail,
         folderId: folderId,

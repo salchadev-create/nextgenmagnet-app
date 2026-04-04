@@ -33,7 +33,7 @@ export default function NotePage() {
       try {
         const productId = localStorage.getItem('product_id');
         if (productId) {
-          const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
+          const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'activeTravelProduct';
           const firestore = getDb();
           const docRef = doc(firestore, collectionName, productId);
           const docSnap = await getDoc(docRef);
@@ -85,7 +85,7 @@ export default function NotePage() {
           return;
         }
 
-        const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
+        const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'activeTravelProduct';
         const firestore = getDb();
         const docRef = doc(firestore, collectionName, productId);
         

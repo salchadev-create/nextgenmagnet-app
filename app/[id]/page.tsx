@@ -26,7 +26,7 @@ export default function ProductEntryPage() {
     const checkAndRoute = async () => {
       try {
         const collectionName =
-          process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
+          process.env.NEXT_PUBLIC_COLLECTION_NAME || 'activeTravelProduct';
 
         const firestore = getDb();
         const docRef = doc(firestore, collectionName, id);
