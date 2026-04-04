@@ -162,24 +162,33 @@ export async function listPhotosFromFolder(
     `'${folderId}' in parents and mimeType contains 'image/' and trashed=false`
   );
 
+  const url = `${DRIVE_API_URL}/files?q=${q}&fields=files(id,name)&orderBy=createdTime&pageSize=100`;
+  console.log('🌐 Drive API çağrısı:', url);
+
   const res = await fetch(
-    `${DRIVE_API_URL}/files?q=${q}&fields=files(id,name)&orderBy=createdTime&pageSize=100`,
+    url,
     {
       headers: { Authorization: `Bearer ${accessToken}` },
     }
   );
 
   if (!res.ok) {
+    console.error('❌ Drive liste hatası:', res.status, res.statusText);
     throw new Error(`Drive liste hatası: ${res.statusText}`);
   }
 
   const data = await res.json();
+  console.log('📊 Drive API yanıtı:', data);
   const files: { id: string; name: string }[] = data.files ?? [];
+  console.log(`📦 Bulunan dosya sayısı: ${files.length}`);
 
   // Proxy route üzerinden çekilen URL – tarayıcıdan doğrudan Bearer header gönderilemez
-  return files.map((f) => ({
+  const result = files.map((f) => ({
     id: f.id,
     name: f.name,
     src: `/api/drive-photo?fileId=${f.id}&token=${encodeURIComponent(accessToken)}`,
   }));
+  
+  console.log('🖼️ Proxy URL\'ler oluşturuldu:', result);
+  return result;
 }

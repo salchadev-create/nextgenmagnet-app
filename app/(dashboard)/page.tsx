@@ -103,13 +103,21 @@ export default function DashboardPage() {
   }, [user, loading]);
 
   const handleUploadClick = () => {
+    // Input'u önce temizle, sonra click et (tekrar seçim yapmayı sağlar)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
     fileInputRef.current?.click();
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (!files || files.length === 0) return;
+    if (!files || files.length === 0) {
+      console.log('❌ Dosya seçilmedi');
+      return;
+    }
 
+    console.log('📂 Dosya seçildi:', files.length, 'adet');
     setIsUploading(true);
     setUploadError(null);
 
@@ -167,17 +175,42 @@ export default function DashboardPage() {
         }
       }
 
+      // Yüklenen dosyaları takip et - Upload sonuçlarını direkt kullanacağız
+      const uploadedPhotos: DrivePhoto[] = [];
+      console.log('🚀 Upload başladı, preview sayısı:', previews.length);
+      
       for (const { file } of previews) {
-        await uploadFileToDrive(token, file, folderId);
+        console.log('📤 Dosya yükleniyor:', file.name);
+        const result = await uploadFileToDrive(token, file, folderId);
+        console.log('✅ Dosya yüklendi:', result.id, result.name);
+        
+        // Yüklenen dosyayı hemen proxy URL'le ekle
+        const photoUrl = `/api/drive-photo?fileId=${result.id}&token=${encodeURIComponent(token)}`;
+        console.log('🔗 Proxy URL oluşturuldu:', photoUrl);
+        
+        uploadedPhotos.push({
+          id: result.id,
+          name: result.name,
+          src: photoUrl,
+        });
       }
 
-      // Upload bitti: Drive'dan taze liste çek, sonra local preview'ları kaldır
-      const token2 = accessToken ?? localStorage.getItem('google_access_token');
-      if (token2) {
-        const refreshed = await listPhotosFromFolder(token2, folderId);
-        setPhotos(refreshed);
-      }
+      console.log('📦 Upload tamamlandı, toplam:', uploadedPhotos.length, uploadedPhotos);
+
+      // Google Drive'ın dosyaları indexlemesi için 2 saniye bekle (opsiyonel)
+      console.log('⏳ Drive indexleme için bekleniyor...');
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Yüklenen fotoları state'e ekle (Drive'dan yeniden sorgulamak yerine)
+      console.log('✅ Yüklenen fotoğraflar state\'e ekleniyor:', uploadedPhotos.length);
+      setPhotos(prev => {
+        console.log('State güncellemesi: eski=', prev.length, 'yeni eklenecek=', uploadedPhotos.length);
+        return [...prev, ...uploadedPhotos];  // Yeni fotoğraflar sonda eklenecek
+      });
+      
+      // Local preview'ları temizle
       setLocalPreviews([]);
+      console.log('🧹 Local preview\'lar temizlendi');
 
       setShowUploadSuccess(true);
       setTimeout(() => setShowUploadSuccess(false), 3000);
@@ -188,8 +221,7 @@ export default function DashboardPage() {
       setTimeout(() => setUploadError(null), 5000);
     } finally {
       setIsUploading(false);
-      // Input'u temizle ki aynı dosya tekrar seçilebilsin
-      if (fileInputRef.current) fileInputRef.current.value = '';
+      // Input'u temizle kodunu kaldırdık - artık handleUploadClick'te yapılıyor
     }
   };
 
@@ -227,31 +259,46 @@ export default function DashboardPage() {
     if (selectedPhotoIndex === null) return;
 
     const photoToDelete = allPhotos[selectedPhotoIndex];
+    console.log('🗑️ Silme işlemi başladı:', photoToDelete.id);
 
-    // Önce local state'den kaldır (anlık tepki)
-    const newPhotos = photos.filter((_: DrivePhoto, index: number) => index !== selectedPhotoIndex);
-    setPhotos(newPhotos);
-
-    if (newPhotos.length === 0) {
-      setSelectedPhotoIndex(null);
-    } else if (selectedPhotoIndex >= newPhotos.length) {
-      setSelectedPhotoIndex(selectedPhotoIndex - 1);
-    }
-
-    // Drive'dan sil (local preview ise atla)
-    if (!photoToDelete.id.startsWith('local_preview_')) {
-      try {
+    try {
+      // Drive'dan sil (local preview ise atla)
+      if (!photoToDelete.id.startsWith('local_preview_')) {
         const token = accessToken ?? localStorage.getItem('google_access_token');
         if (token) {
           await deleteFileFromDrive(token, photoToDelete.id);
+          console.log('✅ Drive\'dan silindi');
         }
-      } catch (err) {
-        console.error('Drive silme hatası:', err);
       }
-    }
 
-    setShowDeleteSuccess(true);
-    setTimeout(() => setShowDeleteSuccess(false), 3000);
+      // Local state'den kaldır - allPhotos'un indeksini kullanarak doğru şekilde sil
+      if (photoToDelete.id.startsWith('local_preview_')) {
+        // Local preview ise localPreviews'den sil
+        setLocalPreviews(prev => prev.filter(p => p.id !== photoToDelete.id));
+        console.log('🗑️ Local preview silindi');
+      } else {
+        // Drive fotoğrafı ise photos'tan sil
+        setPhotos(prev => prev.filter(p => p.id !== photoToDelete.id));
+        console.log('🗑️ Drive fotoğrafı state\'ten silindi');
+      }
+
+      // Modal'ı kapat
+      if (allPhotos.length <= 1) {
+        setSelectedPhotoIndex(null);
+      } else {
+        // Sonraki fotoğrafa git
+        setSelectedPhotoIndex(prev => 
+          prev !== null && prev >= allPhotos.length - 1 ? prev - 1 : prev
+        );
+      }
+
+      setShowDeleteSuccess(true);
+      setTimeout(() => setShowDeleteSuccess(false), 3000);
+    } catch (err) {
+      console.error('🔴 Silme hatası:', err);
+      const message = err instanceof Error ? err.message : String(err);
+      setUploadError(`Silme başarısız: ${message}`);
+    }
   };
 
   const handlePrevPhoto = () => {

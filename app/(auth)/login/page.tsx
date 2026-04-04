@@ -21,28 +21,82 @@ function LoginContent() {
   const [showSplash, setShowSplash] = useState(true);
   const [hint, setHint] = useState<ButtonHint>(null);
 
+  // Sayfa açıldığında otomatik olarak ürün kontrolü yap
+  useEffect(() => {
+    const checkProductOnPageLoad = async () => {
+      if (!productId) {
+        setHint('no_id');
+        return;
+      }
+
+      setHint('checking');
+      
+      // Timeout ile hata kontrolü (10 saniye)
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Firestore timeout')), 10000)
+      );
+
+      try {
+        const firestore = getDb();
+        const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
+        
+        // Timeout ile beraber getDoc yapıştır
+        const docSnap = await Promise.race([
+          getDoc(doc(firestore, collectionName, productId)),
+          timeoutPromise
+        ]) as any;
+
+        if (!docSnap.exists()) {
+          console.log('Ürün bulunamadı:', productId);
+          setHint('not_found');
+        } else {
+          console.log('Ürün bulundu:', productId);
+          // Ürün bulundu, hint'i temizle
+          setHint(null);
+        }
+      } catch (err) {
+        console.error('Ürün kontrol hatası:', err);
+        setHint('not_found');
+      }
+    };
+
+    checkProductOnPageLoad();
+  }, [productId]);
+
   useEffect(() => {
     const timer = setTimeout(() => setShowSplash(false), 2500);
     return () => clearTimeout(timer);
   }, []);
 
   const handleGoogleLogin = async () => {
-    setIsGoogleLoading(true);
-    setHint(null);
-
-    // 1. ID yoksa → butona mesaj bas, işlemi durdur
-    if (!productId) {
-      setHint('no_id');
-      setIsGoogleLoading(false);
+    // Ürün kontrol başarısız ise işlemi durdur
+    if (hint === 'not_found' || hint === 'no_id') {
       return;
     }
 
-    // 2. ID var → Firestore'da kontrol et
-    setHint('checking');
+    setIsGoogleLoading(true);
+
+    // Timeout ile hata kontrolü (15 saniye)
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Operation timeout')), 15000)
+    );
+
     try {
+      // ID yoksa → butona mesaj bas, işlemi durdur
+      if (!productId) {
+        setHint('no_id');
+        setIsGoogleLoading(false);
+        return;
+      }
+
+      // 2. Ürün verilerini getir
       const firestore = getDb();
       const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME || 'products';
-      const docSnap = await getDoc(doc(firestore, collectionName, productId));
+      
+      const docSnap = await Promise.race([
+        getDoc(doc(firestore, collectionName, productId)),
+        timeoutPromise
+      ]) as any;
 
       if (!docSnap.exists()) {
         setHint('not_found');
@@ -55,10 +109,14 @@ function LoginContent() {
       const hasEmail = !!(data?.eMail && String(data.eMail).trim() !== '');
       const storedEmail = hasEmail ? String(data.eMail).trim().toLowerCase() : null;
 
-      // 4. ID geçerli → Google ile giriş yap
+      // 4. Google ile giriş yap
       setHint(null);
       localStorage.setItem('product_id', productId);
-      const authResult = await signInWithGoogle();
+      
+      const authResult = await Promise.race([
+        signInWithGoogle(),
+        timeoutPromise
+      ]) as any;
 
       // 5. E-mail dolu ise → giriş yapan kullanıcının e-maili eşleşiyor mu kontrol et
       if (hasEmail && storedEmail) {
