@@ -5,10 +5,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import DashboardHeader from '../../components/dashboard/DashboardHeader';
 import Footer from '@/components/common/Footer';
 import seyehatImg from '@/app/assets/images/seyehat.png';
+import cumalikizikBg from '@/app/assets/images/cumalikizik/background.png';
 import editIcon from '@/app/assets/icons/edit.svg';
 import Image from 'next/image';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { getDb } from '@/lib/firebase';
+
+const LOCATION_HERO_IMAGES: Record<string, any> = {
+  'cumalıkızık': cumalikizikBg,
+};
 
 const DEFAULT_ENTRY = {
   heroImage: seyehatImg,
@@ -43,6 +48,10 @@ export default function NotePage() {
             const updates: any = {};
             if (data.location) {
               updates.location = data.location;
+              const heroImg = LOCATION_HERO_IMAGES[data.location.toLowerCase().trim()];
+              if (heroImg) {
+                updates.heroImage = heroImg;
+              }
             }
             if (data.dateRange) {
               updates.dateRange = data.dateRange;

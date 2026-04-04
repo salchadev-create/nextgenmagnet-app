@@ -8,8 +8,13 @@ import { AuthHeader, GoogleLoginButton } from '@/components/auth';
 import Footer from '@/components/common/Footer';
 import { useGoogleAuth } from '@/hooks/useGoogleAuth';
 import { getDb, getFirebaseAuth } from '@/lib/firebase';
+import cumalikizikBg from '@/app/assets/images/cumalikizik/background.png';
 
 type ButtonHint = null | 'no_id' | 'checking' | 'not_found';
+
+const LOCATION_BACKGROUNDS: Record<string, string> = {
+  'cumalıkızık': cumalikizikBg.src ?? (cumalikizikBg as unknown as string),
+};
 
 function LoginContent() {
   const searchParams = useSearchParams();
@@ -20,12 +25,15 @@ function LoginContent() {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
   const [hint, setHint] = useState<ButtonHint>(null);
+  const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
+  const [firestoreDone, setFirestoreDone] = useState(false);
 
   // Sayfa açıldığında otomatik olarak ürün kontrolü yap
   useEffect(() => {
     const checkProductOnPageLoad = async () => {
       if (!productId) {
         setHint('no_id');
+        setFirestoreDone(true);
         return;
       }
 
@@ -53,18 +61,34 @@ function LoginContent() {
           console.log('Ürün bulundu:', productId);
           // Ürün bulundu, hint'i temizle
           setHint(null);
+          // location kontrolü → arkaplan belirle
+          const data = docSnap.data();
+          const location: string = (data?.location ?? '').toLowerCase().trim();
+          const bg = LOCATION_BACKGROUNDS[location] ?? null;
+          console.log('[BG DEBUG] location:', JSON.stringify(location), '| bg:', bg, '| map:', LOCATION_BACKGROUNDS);
+          setBackgroundImage(bg);
         }
       } catch (err) {
         console.error('Ürün kontrol hatası:', err);
         setHint('not_found');
+      } finally {
+        setFirestoreDone(true);
       }
     };
 
     checkProductOnPageLoad();
   }, [productId]);
 
+  // Firestore bittikten sonra splash'ı kaldır (min 800ms göster)
   useEffect(() => {
-    const timer = setTimeout(() => setShowSplash(false), 2500);
+    if (!firestoreDone) return;
+    const timer = setTimeout(() => setShowSplash(false), 300);
+    return () => clearTimeout(timer);
+  }, [firestoreDone]);
+
+  // Firestore 3 saniyeden uzun sürerse splash'ı yine de kaldır
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSplash(false), 3000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -155,16 +179,38 @@ function LoginContent() {
   };
 
   return (
-    <div className="relative flex flex-col min-h-screen bg-white">
+    <div
+      className={`relative flex flex-col min-h-screen ${backgroundImage ? '' : 'bg-white'}`}
+      style={
+        backgroundImage
+          ? {
+              backgroundImage: `url(${backgroundImage})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+            }
+          : undefined
+      }
+    >
       {showSplash && (
-        <div className="fixed inset-0 flex items-center justify-center bg-white z-50" />
+        <div className="fixed inset-0 flex items-center justify-center z-50" style={backgroundImage ? {
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        } : { backgroundColor: 'white' }} />
+      )}
+
+      {/* Arkaplan görseli varken karartma overlay */}
+      {backgroundImage && (
+        <div className="absolute inset-0 bg-black/60 z-0" />
       )}
 
       {/* İçerik alanı — flex-1 ile footer'ı aşağıya iter */}
-      <div className={`flex-1 flex flex-col items-center justify-center gap-8 px-6 py-12 transition-opacity duration-500 ${showSplash ? 'opacity-0' : 'opacity-100'}`}>
+      <div className={`relative z-10 flex-1 flex flex-col items-center justify-center gap-8 px-6 py-12 transition-opacity duration-500 ${showSplash ? 'opacity-0' : 'opacity-100'}`}>
         <AuthHeader
           title="Hoşgeldiniz!"
           subtitle="Hatıralarınızı magnete sığdırdık..."
+          dark={!!backgroundImage}
         />
 
         <div className="w-full max-w-sm space-y-3 text-center">
@@ -179,16 +225,20 @@ function LoginContent() {
             </p>
           )}
 
-          <p className="text-sm text-gray-500 pt-2">
+          <p className={`text-sm pt-2 ${backgroundImage ? 'text-white/80' : 'text-gray-500'}`}>
             Hesabınız yok mu?
-            <a href="https://accounts.google.com/signup" target="_blank" rel="noopener noreferrer" className="text-primary font-semibold hover:underline ml-1">
+            <a href="https://accounts.google.com/signup" target="_blank" rel="noopener noreferrer" className={`font-semibold hover:underline ml-1 ${backgroundImage ? 'text-white' : 'text-primary'}`}>
               Kayıt Ol
             </a>
           </p>
         </div>
       </div>
 
-      {!showSplash && <Footer />}
+      {!showSplash && (
+        <div className={`relative z-10 w-full ${backgroundImage ? '[&_footer]:bg-transparent [&_footer]:border-white/20 [&_footer]:text-white [&_footer_p]:text-white/70 [&_footer_a]:text-white/70 [&_footer_svg]:text-white/70' : ''}`}>
+          <Footer hideLogo />
+        </div>
+      )}
     </div>
   );
 }

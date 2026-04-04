@@ -6,18 +6,26 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsis, faXmark } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 import Footer from '@/components/common/Footer';
-import g1 from '@/app/assets/images/travel-photos/g1.jpg';
-import g2 from '@/app/assets/images/travel-photos/g2.jpg';
-import g3 from '@/app/assets/images/travel-photos/g3.jpg';
-import g4 from '@/app/assets/images/travel-photos/g4.jpg';
-import g5 from '@/app/assets/images/travel-photos/g5.jpg';
-import g6 from '@/app/assets/images/travel-photos/g6.jpg';
-import g7 from '@/app/assets/images/travel-photos/g7.jpg';
-import g8 from '@/app/assets/images/travel-photos/g8.jpg';
-import g9 from '@/app/assets/images/travel-photos/g9.jpg';
-import g10 from '@/app/assets/images/travel-photos/g10.jpg';
-import g11 from '@/app/assets/images/travel-photos/g11.jpg';
-import g12 from '@/app/assets/images/travel-photos/g12.jpg';
+import g3 from '@/app/assets/images/travel-photos/g3.jpeg';
+import g4 from '@/app/assets/images/travel-photos/g4.jpeg';
+import g5 from '@/app/assets/images/travel-photos/g5.jpeg';
+import g6 from '@/app/assets/images/travel-photos/g6.jpeg';
+import g7 from '@/app/assets/images/travel-photos/g7.jpeg';
+import g8 from '@/app/assets/images/travel-photos/g8.jpeg';
+import g9 from '@/app/assets/images/travel-photos/g9.jpeg';
+import g10 from '@/app/assets/images/travel-photos/g10.jpeg';
+import g11 from '@/app/assets/images/travel-photos/g11.jpeg';
+import g13 from '@/app/assets/images/travel-photos/g13.jpeg';
+import g14 from '@/app/assets/images/travel-photos/g14.jpeg';
+import g15 from '@/app/assets/images/travel-photos/g15.jpeg';
+import g16 from '@/app/assets/images/travel-photos/g16.jpeg';
+import g18 from '@/app/assets/images/travel-photos/g18.jpeg';
+import g19 from '@/app/assets/images/travel-photos/g19.jpeg';
+import g22 from '@/app/assets/images/travel-photos/g22.jpeg';
+import g23 from '@/app/assets/images/travel-photos/g23.jpeg';
+import g25 from '@/app/assets/images/travel-photos/g25.jpeg';
+import g27 from '@/app/assets/images/travel-photos/g27.jpeg';
+import g28 from '@/app/assets/images/travel-photos/g28.jpeg';
 import seyehatImg from '@/app/assets/images/seyehat.png';
 import editIcon from '@/app/assets/icons/edit.svg';
 import hamburgerIcon from '@/app/assets/icons/hamburger.svg';
@@ -34,8 +42,6 @@ type LocalPhoto = {
 };
 
 const STATIC_PHOTOS: LocalPhoto[] = [
-  { id: 'g1', name: 'Fotoğraf 1', src: g1 },
-  { id: 'g2', name: 'Fotoğraf 2', src: g2 },
   { id: 'g3', name: 'Fotoğraf 3', src: g3 },
   { id: 'g4', name: 'Fotoğraf 4', src: g4 },
   { id: 'g5', name: 'Fotoğraf 5', src: g5 },
@@ -45,20 +51,34 @@ const STATIC_PHOTOS: LocalPhoto[] = [
   { id: 'g9', name: 'Fotoğraf 9', src: g9 },
   { id: 'g10', name: 'Fotoğraf 10', src: g10 },
   { id: 'g11', name: 'Fotoğraf 11', src: g11 },
-  { id: 'g12', name: 'Fotoğraf 12', src: g12 },
+  { id: 'g13', name: 'Fotoğraf 13', src: g13 },
+  { id: 'g14', name: 'Fotoğraf 14', src: g14 },
+  { id: 'g15', name: 'Fotoğraf 15', src: g15 },
+  { id: 'g16', name: 'Fotoğraf 16', src: g16 },
+  { id: 'g18', name: 'Fotoğraf 18', src: g18 },
+  { id: 'g19', name: 'Fotoğraf 19', src: g19 },
+  { id: 'g22', name: 'Fotoğraf 22', src: g22 },
+  { id: 'g23', name: 'Fotoğraf 23', src: g23 },
+  { id: 'g25', name: 'Fotoğraf 25', src: g25 },
+  { id: 'g27', name: 'Fotoğraf 27', src: g27 },
+  { id: 'g28', name: 'Fotoğraf 28', src: g28 },
 ];
 
 // ─── Note Test ─────────────────────────────────────────────────────────────
 
 const DEFAULT_NOTE = {
-  heroImage: g1,
+  heroImage: g3,
   title: 'Geziye Dair Notlar',
   dateRange: '14 May 2026',
   location: 'Positano, İtalya',
   pullquote: '"Dünya bir kitaptır ve gezmeyenler sadece bir sayfasını okurlar."',
-  body: `Bugün zamanın biraz daha yavaş aktığı bir yerdeyim. Gölyazı’nın dar sokaklarında yürürken, gölün kokusuyla karışan taze ekşi mayalı ekmek kokusu tüm yorgunluğumu aldı. Ulu Çınar’ın altında oturup suyun üzerindeki ışık oyunlarını izlemek, sadece bir manzara seyri değil; zihnimdeki karmaşayı sessize alma çabasıydı.
+  body: `Sabahın ilk ışıkları odanın içine süzüldüğünde, bu kez alarmın o metalik sesiyle değil, pencerenin hemen dışındaki bir kuşun ısrarcı şarkısıyla uyandım. Şehrin alışıldık koşturmacasından uzak, sadece bugünü yaşama arzusuyla sırt çantamı hazırladım. İçine sadece bir defter, bir kalem ve en sevdiğim kitabı attım; zira bugün rotayı ben değil, karşıma çıkan sokaklar belirleyecekti.
 
-Eski evlerin pencerelerinden sarkan sardunyalar ve kıyıya vuran küçük sandallar, insana sadeleşmenin ne kadar kıymetli olduğunu hatırlatıyor. Yanımda sadece küçük bir kahve ve bu defter var. Şehirdeki o hızlı koşturmacanın aksine, burada sadece "şimdi" var. Bir sonraki durağımı düşünmek yerine, şu an tenime değen rüzgarın tadını çıkarmayı seçiyorum. Bazı rotalar sadece yol üstü durağı değil, insanın kendine dönüş biletidir.`,
+Kaldırıma adımımı attığımda, burnuma taze pişmiş ekmek kokusu ve hafif nemli bir toprak kokusu çalındı. İlk gördüğüm dar yokuştan aşağı, denizin kokusunu takip ederek inmeye başladım. Hiç tanımadığım bir fırının önünde durup, dumanı üstünde bir simit aldım. Esnafla edilen o kısa ama samimi sabah selamlaşması, bir turistin değil de sanki oranın kadim bir sakiniymişim hissini verdi bana. İşte o an anladım; gezmek sadece mesafe kat etmek değil, o anın ruhuna sızabilmekti.
+
+Öğle sıcağı bastırdığında kendimi ulu bir ağacın gölgesindeki eski bir taş bankta buldum. Yanımda akıp giden hayatı izlemek, insanların telaşsız adımlarına tanık olmak, telefonun ekranına bakmaktan çok daha dinlendiriciydi. Hiçbir "görülmesi gerekenler" listesine sadık kalmamanın verdiği o hafiflik, omuzlarımdaki yükü tamamen almıştı.
+
+Güneş yavaşça çekilip gökyüzü pastel tonlara bürünürken, bir kafenin köşesinde kahvemi yudumlayıp defterime şu notu düştüm: "En güzel yolculuklar, insanın kendini kaybetmekten korkmadığı yollarda başlar." Bugün belki dünyaca ünlü bir müze gezmedim ama kendi içimdeki o sessiz limanı yeniden keşfettim.`,
 };
 
 const LS_KEY = 'travel_test_note';
@@ -260,7 +280,7 @@ function NoteTestPanel() {
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
             </svg>
-            <span className="font-medium">Not kaydedildi! (localStorage)</span>
+            <span className="font-medium">Not kaydedildi!</span>
           </motion.div>
         )}
       </AnimatePresence>
