@@ -1,0 +1,80 @@
+{
+  "name": "Souvenir App",
+  "short_name": "Souvenir",
+  "description": "Seyahatinizden geri döndüğünüzde anılarınızı organize edebileceğiniz, not tutabileceğiniz ve Google Drive'a kaydedebileceğiniz bir uygulama.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-1.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshot-2.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "categories": ["travel", "productivity"],
+  "shortcuts": [
+    {
+      "name": "Notlar",
+      "short_name": "Notlar",
+      "description": "Hızlı not ekle",
+      "url": "/note",
+      "icons": [
+        {
+          "src": "/notes-icon.svg",
+          "sizes": "192x192",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Galeri",
+      "short_name": "Galeri",
+      "description": "Foto galerini aç",
+      "url": "/",
+      "icons": [
+        {
+          "src": "/gallery-icon.svg",
+          "sizes": "192x192",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ]
+}
