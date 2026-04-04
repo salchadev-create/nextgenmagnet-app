@@ -454,7 +454,7 @@ export default function DashboardPage() {
               onClick={handleUploadClick}
               className="aspect-square border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition"
             >
-              <Image src={uploadIcon} alt="Upload" width={24} height={24} className="mb-2" />
+              <Image src={uploadIcon} alt="Upload" width={24} height={24} className="mb-2" loading="eager" />
               <span className="text-xs text-gray-500 font-semibold">Fotoğraf Yükle</span>
               <input
                 ref={fileInputRef}

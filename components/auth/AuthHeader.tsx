@@ -15,6 +15,7 @@ export const AuthHeader: React.FC<AuthHeaderProps> = ({ title, subtitle }) => {
           src={logo}
           alt="Souvenir Logo"
           className="w-32 h-16"
+          loading="eager"
         />
       </div>
       <h1 className="text-3xl font-bold tracking-tight mb-2 text-black">{title}</h1>
