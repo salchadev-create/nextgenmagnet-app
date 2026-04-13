@@ -474,11 +474,16 @@ export default function DashboardPage() {
       </div>
 
       {/* Photo Modal */}
+      <AnimatePresence>
       {selectedPhotoIndex !== null && (
-        <div 
-          className="fixed inset-0 z-50 flex flex-col overflow-hidden" 
+        <motion.div
+          className="fixed inset-0 z-50 flex flex-col overflow-hidden"
           style={{ backgroundColor: 'rgba(0, 0, 0, 0.9)' }}
           onClick={handleCloseModal}
+          initial={{ opacity: 0, scale: 0.88 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.88 }}
+          transition={{ duration: 0.22, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           {/* Top Bar */}
           <div className="flex justify-between items-center p-3 relative shrink-0" style={{ backgroundColor: 'transparent' }} onClick={(e) => e.stopPropagation()}>
@@ -514,14 +519,14 @@ export default function DashboardPage() {
                 draggable="false"
                 custom={modalDirection}
                 variants={{
-                  enter: (dir: number) => ({ opacity: 0, x: dir * 80 }),
-                  center: { opacity: 1, x: 0 },
-                  exit: (dir: number) => ({ opacity: 0, x: dir * -80 }),
+                  enter: (dir: number) => ({ opacity: 0, x: dir * 40, scale: 0.96 }),
+                  center: { opacity: 1, x: 0, scale: 1 },
+                  exit: (dir: number) => ({ opacity: 0, x: dir * -40, scale: 0.96 }),
                 }}
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                transition={{ type: 'spring', stiffness: 380, damping: 32, mass: 0.8 }}
                 onClick={(e) => e.stopPropagation()}
               />
             </AnimatePresence>
@@ -580,8 +585,9 @@ export default function DashboardPage() {
               <span className="font-medium">Fotoğraf başarıyla silindi!</span>
             </motion.div>
           )}
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
 
       {/* Upload Loading Toast */}
       {isUploading && (

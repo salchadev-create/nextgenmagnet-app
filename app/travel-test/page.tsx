@@ -297,6 +297,7 @@ export default function TravelTestPage() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
   const [showUploadSuccess, setShowUploadSuccess] = useState(false);
+  const [showUploadError, setShowUploadError] = useState<string | null>(null);
   const [modalDirection, setModalDirection] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState(0);
@@ -354,11 +355,38 @@ export default function TravelTestPage() {
     fileInputRef.current?.click();
   };
 
+  const MAX_PHOTOS = 50;
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    const fileArray = Array.from(files);
+    // Filter out non-image files
+    const imageFiles = Array.from(files).filter((file) => file.type.startsWith('image/'));
+    if (imageFiles.length < files.length) {
+      setShowUploadError('Sadece fotoğraf yükleyebilirsiniz. Video ve diğer dosyalar kabul edilmez.');
+      setTimeout(() => setShowUploadError(null), 4000);
+    }
+
+    if (imageFiles.length === 0) {
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      return;
+    }
+
+    const remaining = MAX_PHOTOS - photos.length;
+    if (remaining <= 0) {
+      setShowUploadError(`En fazla ${MAX_PHOTOS} fotoğraf yükleyebilirsiniz.`);
+      setTimeout(() => setShowUploadError(null), 4000);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      return;
+    }
+
+    const fileArray = imageFiles.slice(0, remaining);
+    if (imageFiles.length > remaining) {
+      setShowUploadError(`En fazla ${MAX_PHOTOS} fotoğraf yükleyebilirsiniz. ${remaining} fotoğraf eklendi.`);
+      setTimeout(() => setShowUploadError(null), 4000);
+    }
+
     const previewPromises = fileArray.map(
       (file) =>
         new Promise<LocalPhoto>((resolve) => {
@@ -518,11 +546,17 @@ export default function TravelTestPage() {
 
             {/* Upload Box */}
             <div
-              onClick={handleUploadClick}
-              className="aspect-square border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition"
+              onClick={photos.length < MAX_PHOTOS ? handleUploadClick : undefined}
+              className={`aspect-square border-2 border-dashed rounded-lg flex flex-col items-center justify-center transition ${
+                photos.length >= MAX_PHOTOS
+                  ? 'border-gray-200 bg-gray-50 cursor-not-allowed opacity-50'
+                  : 'border-gray-300 cursor-pointer hover:border-gray-400 hover:bg-gray-50'
+              }`}
             >
               <Image src={uploadIcon} alt="Upload" width={32} height={32} className="mb-2" loading="eager" />
-              <span className="text-xs text-gray-500 font-semibold">Fotoğraf Ekle</span>
+              <span className="text-xs text-gray-500 font-semibold text-center px-1">
+                {photos.length >= MAX_PHOTOS ? `Limit doldu (${MAX_PHOTOS})` : 'Fotoğraf Ekle'}
+              </span>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -546,11 +580,16 @@ export default function TravelTestPage() {
       </div>
 
       {/* Photo Modal */}
+      <AnimatePresence>
       {selectedPhotoIndex !== null && (
-        <div
+        <motion.div
           className="fixed inset-0 z-50 flex flex-col overflow-hidden"
           style={{ backgroundColor: 'rgba(0, 0, 0, 0.9)' }}
           onClick={handleCloseModal}
+          initial={{ opacity: 0, scale: 0.88 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.88 }}
+          transition={{ duration: 0.22, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           {/* Top Bar */}
           <div
@@ -587,14 +626,14 @@ export default function TravelTestPage() {
                 draggable="false"
                 custom={modalDirection}
                 variants={{
-                  enter: (dir: number) => ({ opacity: 0, x: dir * 80 }),
-                  center: { opacity: 1, x: 0 },
-                  exit: (dir: number) => ({ opacity: 0, x: dir * -80 }),
+                  enter: (dir: number) => ({ opacity: 0, x: dir * 40, scale: 0.96 }),
+                  center: { opacity: 1, x: 0, scale: 1 },
+                  exit: (dir: number) => ({ opacity: 0, x: dir * -40, scale: 0.96 }),
                 }}
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                transition={{ type: 'spring', stiffness: 380, damping: 32, mass: 0.8 }}
                 onClick={(e) => e.stopPropagation()}
               />
             </AnimatePresence>
@@ -669,8 +708,9 @@ export default function TravelTestPage() {
               <span className="font-medium">Fotoğraf silindi!</span>
             </motion.div>
           )}
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
 
       {/* Upload Success Toast */}
       {showUploadSuccess && (
@@ -689,6 +729,26 @@ export default function TravelTestPage() {
             />
           </svg>
           <span className="font-medium">Fotoğraf eklendi!</span>
+        </motion.div>
+      )}
+
+      {/* Upload Error Toast */}
+      {showUploadError && (
+        <motion.div
+          className="fixed bottom-6 left-4 right-4 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 text-sm z-50"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.3 }}
+        >
+          <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              fillRule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-9a1 1 0 012 0v4a1 1 0 01-2 0V9zm1-3a1 1 0 100 2 1 1 0 000-2z"
+              clipRule="evenodd"
+            />
+          </svg>
+          <span className="font-medium">{showUploadError}</span>
         </motion.div>
       )}
     </motion.div>
