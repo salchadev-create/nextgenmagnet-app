@@ -9,11 +9,13 @@ import Footer from '@/components/common/Footer';
 import { useGoogleAuth } from '@/hooks/useGoogleAuth';
 import { getDb, getFirebaseAuth } from '@/lib/firebase';
 import cumalikizikBg from '@/app/assets/images/cumalikizik/background.png';
+import ayvalikBg from '@/app/assets/images/ayvalik/background.png';
 
 type ButtonHint = null | 'no_id' | 'checking' | 'not_found';
 
 const LOCATION_BACKGROUNDS: Record<string, string> = {
   'cumalıkızık': cumalikizikBg.src ?? (cumalikizikBg as unknown as string),
+  'ayvalık': ayvalikBg.src ?? (ayvalikBg as unknown as string),
 };
 
 function LoginContent() {
@@ -172,10 +174,10 @@ function LoginContent() {
     }
   };
 
-  const hintConfig: Record<Exclude<ButtonHint, null>, { text: string; color: string }> = {
-    no_id:       { text: '⚠ Giriş için geçerli bir ürün bağlantısı gerekli.', color: 'text-amber-500' },
-    checking:    { text: '🔍 Ürün kontrol ediliyor...', color: 'text-gray-400' },
-    not_found:   { text: "✕ Bu ID'ye ait ürün bulunamadı.", color: 'text-red-500' },
+  const hintConfig: Record<Exclude<ButtonHint, null>, { text: string; color: string; darkColor: string }> = {
+    no_id:       { text: '⚠ Giriş için geçerli bir ürün bağlantısı gerekli.', color: 'text-amber-500', darkColor: 'text-amber-300' },
+    checking:    { text: '🔍 Ürün kontrol ediliyor...', color: 'text-gray-400', darkColor: 'text-white/70' },
+    not_found:   { text: "✕ Bu ID'ye ait ürün bulunamadı.", color: 'text-red-500', darkColor: 'text-red-300' },
   };
 
   return (
@@ -220,14 +222,23 @@ function LoginContent() {
           />
 
           {hint && (
-            <p className={`text-xs font-medium transition-all ${hintConfig[hint].color}`}>
+            <p className={`text-xs font-medium transition-all ${backgroundImage ? hintConfig[hint].darkColor : hintConfig[hint].color}`}>
               {hintConfig[hint].text}
             </p>
           )}
 
-          <p className={`text-sm pt-2 ${backgroundImage ? 'text-white/80' : 'text-gray-500'}`}>
+          <p
+            className="text-sm pt-2"
+            style={{ color: backgroundImage ? 'rgba(255,255,255,0.85)' : '#6b7280' }}
+          >
             Hesabınız yok mu?
-            <a href="https://accounts.google.com/signup" target="_blank" rel="noopener noreferrer" className={`font-semibold hover:underline ml-1 ${backgroundImage ? 'text-white' : 'text-primary'}`}>
+            <a
+              href="https://accounts.google.com/signup"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold hover:underline ml-1"
+              style={{ color: backgroundImage ? '#ffffff' : 'var(--color-primary, #6366f1)' }}
+            >
               Kayıt Ol
             </a>
           </p>

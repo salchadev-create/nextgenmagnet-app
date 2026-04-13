@@ -19,8 +19,14 @@ export const AuthHeader: React.FC<AuthHeaderProps> = ({ title, subtitle, dark })
           loading="eager"
         />
       </div>
-      <h1 className={`text-3xl font-bold tracking-tight mb-2 ${dark ? 'text-white' : 'text-black'}`}>{title}</h1>
-      <p className={`text-base max-w-70 ${dark ? 'text-white/80' : 'text-gray-600'}`}>{subtitle}</p>
+      <h1
+        className="text-3xl font-bold tracking-tight mb-2"
+        style={{ color: dark ? '#ffffff' : '#000000' }}
+      >{title}</h1>
+      <p
+        className="text-base max-w-70"
+        style={{ color: dark ? 'rgba(255,255,255,0.85)' : '#4b5563' }}
+      >{subtitle}</p>
     </header>
   );
 };
